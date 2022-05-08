@@ -14,8 +14,9 @@ class AuthRepository {
         _appUserStore =
             InMemoryStore<AppUser?>(_convertFirebaseUser(user: initialUser)) {
     // * we map firebase user stream to our user store
-    _firebaseAuthDatasource.authStateChanges
-        .listen((user) => _convertFirebaseUser(user: user));
+    _firebaseAuthDatasource.authStateChanges.listen((user) {
+      _appUserStore.value = _convertFirebaseUser(user: user);
+    });
   }
 
   final FirebaseAuthDataSource _firebaseAuthDatasource;
@@ -29,13 +30,19 @@ class AuthRepository {
       final dto = AppUserDTO.fromFirebaseUser(
         user: firebaseAnonymousUser,
       );
-      return dto.toAppUser;
+
+      final newUser = dto.toAppUser;
+      _appUserStore.value = newUser;
+
+      return newUser;
     } on Exception {
       throw AnonymousSignInException();
     } on TypeError {
       throw AnonymousSignInException();
     }
   }
+
+  Future<void> signOut() => _firebaseAuthDatasource.signOut();
 
   AppUser? get user => _appUserStore.value;
   Stream<AppUser?> get watchUser => _appUserStore.watch;

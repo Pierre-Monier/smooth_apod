@@ -13,6 +13,8 @@ class FirebaseAuthDataSource {
     return userCredential.user!;
   }
 
+  Future<void> signOut() => _firebaseAuth.signOut();
+
   User? get currentUser => _firebaseAuth.currentUser;
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 }

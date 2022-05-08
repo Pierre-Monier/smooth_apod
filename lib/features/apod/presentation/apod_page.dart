@@ -1,12 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ApodPage extends StatelessWidget {
+import '../../auth/data/repository/auth_repository.dart';
+
+class ApodPage extends ConsumerWidget {
   const ApodPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => const Scaffold(
-        body: Center(
-          child: Text('Apod Page'),
-        ),
-      );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authRepository = ref.watch(authRepositoryProvider);
+
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text('Apod Page'),
+          ElevatedButton(
+            onPressed: authRepository.signOut,
+            child: const Text('Sign Out'),
+          )
+        ],
+      ),
+    );
+  }
 }

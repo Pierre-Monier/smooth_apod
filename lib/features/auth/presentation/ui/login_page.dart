@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
 
 import 'login_decoration.dart';
+import 'sign_in_form.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => const Scaffold(
-        body: Center(
-          child: LoginDecoration(),
-        ),
-      );
+  Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+      body: ListView(
+        children: [
+          LoginDecoration(
+            height: screenHeight / 3,
+          ),
+          const SignInForm(),
+        ],
+      ),
+    );
+  }
 }
