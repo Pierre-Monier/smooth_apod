@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 import 'routing/app_router.dart';
 
+// TODO handle top level errors with a custom widget
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

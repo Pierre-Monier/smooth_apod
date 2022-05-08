@@ -9,4 +9,7 @@ class FirebaseAuthDataSource {
     final userCredential = await _firebaseAuth.signInAnonymously();
     return userCredential.user;
   }
+
+  User? get currentUser => _firebaseAuth.currentUser;
+  Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 }
