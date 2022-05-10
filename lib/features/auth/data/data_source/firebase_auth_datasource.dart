@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mocktail/mocktail.dart';
 
 class FirebaseAuthDataSource {
   const FirebaseAuthDataSource({required FirebaseAuth firebaseAuth})
@@ -18,6 +19,8 @@ class FirebaseAuthDataSource {
   User? get currentUser => _firebaseAuth.currentUser;
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 }
+
+class MockFirebaseAuth extends Mock implements FirebaseAuth {}
 
 final firebaseAuthDatasourceProvider = Provider<FirebaseAuthDataSource>((ref) {
   return FirebaseAuthDataSource(firebaseAuth: FirebaseAuth.instance);
