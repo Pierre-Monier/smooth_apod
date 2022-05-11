@@ -42,6 +42,30 @@ class AuthRepository {
     }
   }
 
+  Future<AppUser> signUserWithGithub() async {
+    try {
+      final firebaseGithubUser =
+          await _firebaseAuthDatasource.signUserWithGithub();
+
+      if (firebaseGithubUser == null) {
+        throw Exception('Github sign in return null');
+      }
+
+      final dto = AppUserDTO.fromFirebaseUser(
+        user: firebaseGithubUser,
+      );
+
+      final newUser = dto.toAppUser;
+      _appUserStore.value = newUser;
+
+      return newUser;
+    } on Exception {
+      throw AnonymousSignInException();
+    } on TypeError {
+      throw AnonymousSignInException();
+    }
+  }
+
   Future<void> signOut() => _firebaseAuthDatasource.signOut();
 
   AppUser? get user => _appUserStore.value;

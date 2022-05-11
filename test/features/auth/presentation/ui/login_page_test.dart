@@ -6,6 +6,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:smooth_apod/features/auth/data/data_source/firebase_auth_datasource.dart';
 import 'package:smooth_apod/features/auth/presentation/ui/login_decoration.dart';
 import 'package:smooth_apod/features/auth/presentation/ui/login_page.dart';
+import 'package:smooth_apod/features/auth/presentation/ui/sign_in_button.dart';
 
 import '../../../../mock/class.dart';
 
@@ -15,7 +16,7 @@ void main() {
         .thenAnswer((_) => const Stream<User?>.empty());
   });
 
-  testWidgets('login page ...', (tester) async {
+  testWidgets('it display a decoration', (tester) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -31,5 +32,29 @@ void main() {
     final decorationFinder = find.byType(LoginDecoration);
 
     expect(decorationFinder, findsOneWidget);
+  });
+
+  testWidgets('it display a loader when we tap a signIn button',
+      (tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          firebaseAuthDatasourceProvider
+              .overrideWithValue(mockFirebaseAuthDatasource)
+        ],
+        child: const MaterialApp(
+          home: LoginPage(),
+        ),
+      ),
+    );
+
+    final signInButton = find.byType(SignInButton);
+    expect(signInButton, findsNWidgets(4));
+
+    await tester.tap(signInButton.first);
+    await tester.pump(const Duration(seconds: 1));
+
+    final loader = find.byType(CircularProgressIndicator);
+    expect(loader, findsOneWidget);
   });
 }

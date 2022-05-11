@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../util/app_icons.dart';
 import '../../../../util/app_spacing.dart';
-import '../../data/repository/auth_repository.dart';
+import '../controller/sign_in_controller.dart';
 import 'sign_in_button.dart';
 
 class SignInWrapper extends ConsumerWidget {
@@ -11,7 +11,8 @@ class SignInWrapper extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authRepository = ref.watch(authRepositoryProvider);
+    final signInController = ref.watch(signInControllerProvider.notifier);
+    final signInState = ref.watch(signInControllerProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -19,31 +20,37 @@ class SignInWrapper extends ConsumerWidget {
         SignInButton(
           icon: AppIcons.githubSignIn,
           text: 'Sign in with GitHub',
+          isLoading: signInState.isThisFormLoading(SignInForm.github),
           onTap: () {
-            // TODO implement
+            signInController.signIn(SignInForm.github);
           },
         ),
         AppSpacing.gapH16,
         SignInButton(
           icon: AppIcons.googleSignIn,
           text: 'Sign in with Google',
+          isLoading: signInState.isThisFormLoading(SignInForm.google),
           onTap: () {
-            // TODO implement
+            signInController.signIn(SignInForm.google);
           },
         ),
         AppSpacing.gapH16,
         SignInButton(
           icon: AppIcons.emailSignIn,
           text: 'Sign in with email/password',
+          isLoading: signInState.isThisFormLoading(SignInForm.email),
           onTap: () {
-            // TODO implement
+            signInController.signIn(SignInForm.email);
           },
         ),
         AppSpacing.gapH16,
         SignInButton(
           icon: AppIcons.anonymousSignIn,
           text: 'Sign in anonymously',
-          onTap: authRepository.signUserAnonymously,
+          isLoading: signInState.isThisFormLoading(SignInForm.anonymous),
+          onTap: () {
+            signInController.signIn(SignInForm.anonymous);
+          },
         ),
       ],
     );

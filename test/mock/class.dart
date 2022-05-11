@@ -16,6 +16,8 @@ class MockUserCredential extends Mock implements UserCredential {}
 
 class MockStream extends Mock implements Stream<User?> {}
 
+class GithubAuthProviderFake extends Fake implements GithubAuthProvider {}
+
 final mockFirebaseAuth = MockFirebaseAuth();
 final mockFirebaseAuthDatasource = MockFirebaseAuthDatasource();
 final mockUser = MockUser();

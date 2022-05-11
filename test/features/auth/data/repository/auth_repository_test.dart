@@ -10,6 +10,7 @@ final firebaseMock = MockFirebaseAuthDatasource();
 
 void main() {
   setUpAll(() {
+    registerFallbackValue(GithubAuthProviderFake());
     when(() => mockUserCredential.user).thenReturn(mockUser);
     when(() => mockUser.uid).thenReturn(mockUID);
     when(mockFirebaseAuth.authStateChanges)
@@ -18,6 +19,11 @@ void main() {
         .thenAnswer((_) async => firebaseAuthStream.add(null));
     when(() => mockFirebaseAuth.currentUser).thenReturn(null);
     when(mockFirebaseAuth.signInAnonymously).thenAnswer((invocation) {
+      firebaseAuthStream.add(mockUser);
+      return Future.value(mockUserCredential);
+    });
+    when(() => mockFirebaseAuth.signInWithPopup(any()))
+        .thenAnswer((invocation) {
       firebaseAuthStream.add(mockUser);
       return Future.value(mockUserCredential);
     });
@@ -32,6 +38,19 @@ void main() {
       initialUser: null,
     );
     final user = await authRepository.signUserAnonymously();
+    final userFromStore = authRepository.user;
+
+    expect(user, mockAppUser);
+    expect(userFromStore, mockAppUser);
+  });
+
+  test('it should be able to sign in with github', () async {
+    final authRepository = AuthRepository(
+      firebaseAuthDatasource:
+          FirebaseAuthDataSource(firebaseAuth: mockFirebaseAuth),
+      initialUser: null,
+    );
+    final user = await authRepository.signUserWithGithub();
     final userFromStore = authRepository.user;
 
     expect(user, mockAppUser);

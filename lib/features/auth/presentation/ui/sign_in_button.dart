@@ -8,12 +8,33 @@ class SignInButton extends StatelessWidget {
     required this.icon,
     required this.text,
     required this.onTap,
+    required this.isLoading,
     Key? key,
   }) : super(key: key);
 
   final Widget icon;
   final String text;
   final VoidCallback onTap;
+  final bool isLoading;
+
+  List<Widget> _getContent() => isLoading
+      ? [
+          const Expanded(
+            child: Center(
+              child: SizedBox(
+                width: AppSpacing.p20,
+                height: AppSpacing.p20,
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          )
+        ]
+      : [
+          AppSpacing.gapW16,
+          icon,
+          AppSpacing.gapW16,
+          Text(text),
+        ];
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +53,7 @@ class SignInButton extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(AppSpacing.p16),
             child: Row(
-              children: [
-                AppSpacing.gapW16,
-                icon,
-                AppSpacing.gapW16,
-                Text(text),
-              ],
+              children: _getContent(),
             ),
           ),
         ),
