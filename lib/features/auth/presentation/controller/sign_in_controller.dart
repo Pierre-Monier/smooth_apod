@@ -1,42 +1,44 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:github_sign_in/github_sign_in.dart';
 
 import '../../data/repository/auth_repository.dart';
 
-enum SignInForm {
-  github,
-  google,
-  email,
-  anonymous,
-}
-
 class SignInState {
   const SignInState({
-    required this.formState,
+    required this.githubSignIn,
+    required this.googleSignIn,
+    required this.emailSignIn,
+    required this.anonymousSignIn,
   });
 
   factory SignInState.initial() => const SignInState(
-        formState: {
-          SignInForm.github: AsyncValue.data(null),
-          SignInForm.google: AsyncValue.data(null),
-          SignInForm.email: AsyncValue.data(null),
-          SignInForm.anonymous: AsyncValue.data(null),
-        },
+        githubSignIn: AsyncValue.data(null),
+        googleSignIn: AsyncValue.data(null),
+        emailSignIn: AsyncValue.data(null),
+        anonymousSignIn: AsyncValue.data(null),
       );
 
-  final Map<SignInForm, AsyncValue> formState;
+  final AsyncValue<void> githubSignIn;
+  final AsyncValue<void> googleSignIn;
+  final AsyncValue<void> emailSignIn;
+  final AsyncValue<void> anonymousSignIn;
 
-  SignInState copyWith({Map<SignInForm, AsyncValue<void>>? formState}) =>
-      SignInState(formState: formState ?? this.formState);
-
-  bool isThisFormLoading(SignInForm form) {
-    final asyncValue = formState[form];
-
-    if (asyncValue == null) {
-      return false;
-    }
-
-    return asyncValue.isLoading;
-  }
+  SignInState copyWith({
+    AsyncValue<void>? githubSignIn,
+    AsyncValue<void>? googleSignIn,
+    AsyncValue<void>? emailSignIn,
+    AsyncValue<void>? anonymousSignIn,
+  }) =>
+      SignInState(
+        githubSignIn: githubSignIn ?? this.githubSignIn,
+        googleSignIn: googleSignIn ?? this.googleSignIn,
+        emailSignIn: emailSignIn ?? this.emailSignIn,
+        anonymousSignIn: anonymousSignIn ?? this.anonymousSignIn,
+      );
 }
 
 class SignInController extends StateNotifier<SignInState> {
@@ -48,36 +50,34 @@ class SignInController extends StateNotifier<SignInState> {
 
   final AuthRepository _authRepository;
 
-  Future<void> signIn(SignInForm form) async {
-    final currentFormState = state.formState;
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
-    final newFormState = {
-      ...currentFormState,
-      ...{form: const AsyncValue.loading()}
-    };
+  Future<void> signInAnonymously() async {
+    state = state.copyWith(anonymousSignIn: const AsyncValue.loading());
 
-    state = state.copyWith(formState: newFormState);
+    final newState =
+        await AsyncValue.guard(_authRepository.signUserAnonymously);
+    state = state.copyWith(anonymousSignIn: newState);
+  }
 
-    if (form == SignInForm.anonymous) {
-      final newAnonymouseState =
-          await AsyncValue.guard(_authRepository.signUserAnonymously);
+  Future<void> signInWithGithub({required BuildContext context}) async {
+    state = state.copyWith(githubSignIn: const AsyncValue.loading());
 
-      final newFormState = {
-        ...currentFormState,
-        ...{form: newAnonymouseState}
-      };
-      state = state.copyWith(formState: newFormState);
-    } else if (form == SignInForm.github) {
-      final newGithubState =
-          await AsyncValue.guard(_authRepository.signUserWithGithub);
+    final GitHubSignIn gitHubSignIn = GitHubSignIn(
+      clientId: dotenv.env['GITHUB_CLIENT_ID'] ?? '',
+      clientSecret: dotenv.env['GITHUB_CLIENT_SECRET'] ?? '',
+      redirectUrl: dotenv.env['GITHUB_REDIRECT_URL'] ?? '',
+    );
 
-      // TODO refacto duplicate
-      final newFormState = {
-        ...currentFormState,
-        ...{form: newGithubState}
-      };
-      state = state.copyWith(formState: newFormState);
-    }
+    final result = await gitHubSignIn.signIn(context);
+
+    final newState = await AsyncValue.guard(
+      () => _authRepository.signUserWithGithub(token: result.token),
+    );
+    state = state.copyWith(githubSignIn: newState);
   }
 }
 

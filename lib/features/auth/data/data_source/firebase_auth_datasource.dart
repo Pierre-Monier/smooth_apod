@@ -8,16 +8,15 @@ class FirebaseAuthDataSource {
 
   final FirebaseAuth _firebaseAuth;
 
-  /// this must be used in a try/catch block
-  // TODO refacto, this should return a User?
-  Future<User> signUserAnonymously() async {
+  Future<User?> signUserAnonymously() async {
     final userCredential = await _firebaseAuth.signInAnonymously();
-    return userCredential.user!;
+    return userCredential.user;
   }
 
-  Future<User?> signUserWithGithub() async {
+  Future<User?> signUserWithGithub({required String token}) async {
+    final githubAuthCredential = GithubAuthProvider.credential(token);
     final userCredential =
-        await _firebaseAuth.signInWithPopup(GithubAuthProvider());
+        await _firebaseAuth.signInWithCredential(githubAuthCredential);
 
     return userCredential.user;
   }

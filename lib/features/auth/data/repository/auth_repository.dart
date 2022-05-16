@@ -27,6 +27,10 @@ class AuthRepository {
       final firebaseAnonymousUser =
           await _firebaseAuthDatasource.signUserAnonymously();
 
+      if (firebaseAnonymousUser == null) {
+        throw SignInReturnNullException();
+      }
+
       final dto = AppUserDTO.fromFirebaseUser(
         user: firebaseAnonymousUser,
       );
@@ -35,20 +39,25 @@ class AuthRepository {
       _appUserStore.value = newUser;
 
       return newUser;
+    } on SignInReturnNullException {
+      rethrow;
     } on Exception {
-      throw AnonymousSignInException();
-    } on TypeError {
       throw AnonymousSignInException();
     }
   }
 
-  Future<AppUser> signUserWithGithub() async {
+  // TODO: clean up this code
+  Future<AppUser> signUserWithGithub({required String? token}) async {
     try {
+      if (token == null) {
+        throw SignInReturnNullException();
+      }
+
       final firebaseGithubUser =
-          await _firebaseAuthDatasource.signUserWithGithub();
+          await _firebaseAuthDatasource.signUserWithGithub(token: token);
 
       if (firebaseGithubUser == null) {
-        throw Exception('Github sign in return null');
+        throw SignInReturnNullException();
       }
 
       final dto = AppUserDTO.fromFirebaseUser(
@@ -59,10 +68,10 @@ class AuthRepository {
       _appUserStore.value = newUser;
 
       return newUser;
+    } on SignInReturnNullException {
+      rethrow;
     } on Exception {
-      throw AnonymousSignInException();
-    } on TypeError {
-      throw AnonymousSignInException();
+      throw GithubSignInException();
     }
   }
 
@@ -88,9 +97,23 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
   );
 });
 
+class SignInReturnNullException implements Exception {
+  @override
+  String toString() {
+    return 'SignInReturnNullException';
+  }
+}
+
 class AnonymousSignInException implements Exception {
   @override
   String toString() {
     return 'AnonymousSignInException';
+  }
+}
+
+class GithubSignInException implements Exception {
+  @override
+  String toString() {
+    return 'GithubSignInException';
   }
 }

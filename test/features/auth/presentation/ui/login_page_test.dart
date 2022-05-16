@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -11,7 +12,9 @@ import 'package:smooth_apod/features/auth/presentation/ui/sign_in_button.dart';
 import '../../../../mock/class.dart';
 
 void main() {
-  setUpAll(() {
+  setUpAll(() async {
+    await dotenv.load();
+
     when(() => mockFirebaseAuthDatasource.authStateChanges)
         .thenAnswer((_) => const Stream<User?>.empty());
   });

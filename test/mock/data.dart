@@ -5,3 +5,4 @@ const mockUID = 'some_random_uid';
 const mockUsername = 'fakeUsername';
 const mockAppUser =
     AppUser(uid: mockUID, username: AppUserDTO.anonymousUserName);
+const mockGithubToken = 'faketoken';

@@ -20,37 +20,31 @@ class SignInWrapper extends ConsumerWidget {
         SignInButton(
           icon: AppIcons.githubSignIn,
           text: 'Sign in with GitHub',
-          isLoading: signInState.isThisFormLoading(SignInForm.github),
+          isLoading: signInState.githubSignIn.isLoading,
           onTap: () {
-            signInController.signIn(SignInForm.github);
+            signInController.signInWithGithub(context: context);
           },
         ),
         AppSpacing.gapH16,
         SignInButton(
           icon: AppIcons.googleSignIn,
           text: 'Sign in with Google',
-          isLoading: signInState.isThisFormLoading(SignInForm.google),
-          onTap: () {
-            signInController.signIn(SignInForm.google);
-          },
+          isLoading: signInState.googleSignIn.isLoading,
+          onTap: () {},
         ),
         AppSpacing.gapH16,
         SignInButton(
           icon: AppIcons.emailSignIn,
           text: 'Sign in with email/password',
-          isLoading: signInState.isThisFormLoading(SignInForm.email),
-          onTap: () {
-            signInController.signIn(SignInForm.email);
-          },
+          isLoading: signInState.emailSignIn.isLoading,
+          onTap: () {},
         ),
         AppSpacing.gapH16,
         SignInButton(
           icon: AppIcons.anonymousSignIn,
           text: 'Sign in anonymously',
-          isLoading: signInState.isThisFormLoading(SignInForm.anonymous),
-          onTap: () {
-            signInController.signIn(SignInForm.anonymous);
-          },
+          isLoading: signInState.anonymousSignIn.isLoading,
+          onTap: signInController.signInAnonymously,
         ),
       ],
     );
