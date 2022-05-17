@@ -6,6 +6,9 @@ import '../../../../mock/class.dart';
 import '../../../../mock/data.dart';
 
 void main() {
+  final firebaseAuthDatasource =
+      FirebaseAuthDataSource(firebaseAuth: mockFirebaseAuth);
+
   setUpAll(() {
     registerFallbackValue(OAuthCredentialFake());
     when(() => mockUserCredential.user).thenReturn(mockUser);
@@ -18,29 +21,30 @@ void main() {
     ).thenAnswer((_) => Future.value(mockUserCredential));
     when(mockFirebaseAuth.signOut).thenAnswer((_) => Future.value());
   });
-  test('it should be able to signUserAnonymously', () async {
-    final firebaseAuthDatasource =
-        FirebaseAuthDataSource(firebaseAuth: mockFirebaseAuth);
 
+  test('it should be able to signUserAnonymously', () async {
     final user = await firebaseAuthDatasource.signUserAnonymously();
 
     expect(user, mockUser);
   });
 
   test('it should be able to sign in with github', () async {
-    final firebaseAuthDatasource =
-        FirebaseAuthDataSource(firebaseAuth: mockFirebaseAuth);
-
     final user =
         await firebaseAuthDatasource.signUserWithGithub(token: mockGithubToken);
 
     expect(user, mockUser);
   });
 
-  test('it should be able to sign out', () async {
-    final firebaseAuthDatasource =
-        FirebaseAuthDataSource(firebaseAuth: mockFirebaseAuth);
+  test('it should be able to sign in with google', () async {
+    final user = await firebaseAuthDatasource.signUserWithGoogle(
+      accessToken: mockGoogleAccessToken,
+      idToken: mockGoogleIdToken,
+    );
 
+    expect(user, mockUser);
+  });
+
+  test('it should be able to sign out', () async {
     await firebaseAuthDatasource.signOut();
 
     verify(mockFirebaseAuth.signOut).called(1);

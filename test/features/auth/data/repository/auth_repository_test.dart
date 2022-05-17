@@ -26,6 +26,15 @@ void main() {
       return Future.value(mockUser);
     });
     when(
+      () => mockFirebaseAuthDatasource.signUserWithGoogle(
+        accessToken: mockGoogleAccessToken,
+        idToken: mockGoogleIdToken,
+      ),
+    ).thenAnswer((_) {
+      mockFirebaseAuthStream.add(mockUser);
+      return Future.value(mockUser);
+    });
+    when(
       mockFirebaseAuthDatasource.signOut,
     ).thenAnswer((_) async {
       mockFirebaseAuthStream.add(null);
@@ -40,20 +49,8 @@ void main() {
       firebaseAuthDatasource: mockFirebaseAuthDatasource,
       initialUser: null,
     );
+
     final user = await authRepository.signUserAnonymously();
-    final userFromStore = authRepository.user;
-
-    expect(user, mockAppUser);
-    expect(userFromStore, mockAppUser);
-  });
-
-  test('it should be able to sign in with github', () async {
-    final authRepository = AuthRepository(
-      firebaseAuthDatasource: mockFirebaseAuthDatasource,
-      initialUser: null,
-    );
-    final user =
-        await authRepository.signUserWithGithub(token: mockGithubToken);
     final userFromStore = authRepository.user;
 
     expect(user, mockAppUser);
@@ -65,6 +62,7 @@ void main() {
       firebaseAuthDatasource: mockFirebaseAuthDatasource,
       initialUser: null,
     );
+
     await authRepository.signUserAnonymously(); // user is signIn
 
     await authRepository.signOut();
@@ -73,4 +71,151 @@ void main() {
 
     expect(user, null);
   });
+
+  // * this test is place after the signOut test because we use
+  // * signUserAnonymously, and we mock it's behavior in this test
+  test(
+    'it should throw a SignInReturnNullException'
+    ' if anonymous sign in return null',
+    () {
+      final authRepository = AuthRepository(
+        firebaseAuthDatasource: mockFirebaseAuthDatasource,
+        initialUser: null,
+      );
+
+      when(
+        mockFirebaseAuthDatasource.signUserAnonymously,
+      ).thenAnswer((_) {
+        mockFirebaseAuthStream.add(null);
+        return Future.value();
+      });
+
+      expect(
+        () async => await authRepository.signUserAnonymously(),
+        throwsA(isA<SignInReturnNullException>()),
+      );
+    },
+  );
+
+  test('it should be able to sign in with github', () async {
+    final authRepository = AuthRepository(
+      firebaseAuthDatasource: mockFirebaseAuthDatasource,
+      initialUser: null,
+    );
+
+    final user =
+        await authRepository.signUserWithGithub(token: mockGithubToken);
+    final userFromStore = authRepository.user;
+
+    expect(user, mockAppUser);
+    expect(userFromStore, mockAppUser);
+  });
+
+  test(
+    'it should throw a SignInReturnNullException'
+    ' if github sign in get a null token parameter',
+    () {
+      final authRepository = AuthRepository(
+        firebaseAuthDatasource: mockFirebaseAuthDatasource,
+        initialUser: null,
+      );
+
+      when(
+        () => mockFirebaseAuthDatasource.signUserWithGithub(
+          token: mockGithubToken,
+        ),
+      ).thenAnswer((_) {
+        mockFirebaseAuthStream.add(null);
+        return Future.value();
+      });
+
+      expect(
+        () async =>
+            await authRepository.signUserWithGithub(token: mockGithubToken),
+        throwsA(isA<SignInReturnNullException>()),
+      );
+    },
+  );
+
+  test(
+    'it should throw a SignInReturnNullException on github sign in'
+    ' if firebase datasource return a null user',
+    () {
+      final authRepository = AuthRepository(
+        firebaseAuthDatasource: mockFirebaseAuthDatasource,
+        initialUser: null,
+      );
+
+      expect(
+        () async => await authRepository.signUserWithGithub(token: null),
+        throwsA(isA<SignInReturnNullException>()),
+      );
+    },
+  );
+
+  test('it should be able to sign in with google', () async {
+    final authRepository = AuthRepository(
+      firebaseAuthDatasource: mockFirebaseAuthDatasource,
+      initialUser: null,
+    );
+
+    final user = await authRepository.signUserWithGoogle(
+      accessToken: mockGoogleAccessToken,
+      idToken: mockGoogleIdToken,
+    );
+
+    final userFromStore = authRepository.user;
+
+    expect(user, mockAppUser);
+    expect(userFromStore, mockAppUser);
+  });
+
+  test(
+    'it should throw a SignInReturnNullException'
+    ' if google sign in get a null accessToken parameter or'
+    ' a null idToken parameter',
+    () {
+      final authRepository = AuthRepository(
+        firebaseAuthDatasource: mockFirebaseAuthDatasource,
+        initialUser: null,
+      );
+
+      expect(
+        () async => await authRepository.signUserWithGoogle(
+          accessToken: null,
+          idToken: null,
+        ),
+        throwsA(isA<SignInReturnNullException>()),
+      );
+    },
+  );
+
+  test(
+    'it should throw a SignInReturnNullException on google sign in'
+    ' if firebase datasource return a null user',
+    () {
+      final authRepository = AuthRepository(
+        firebaseAuthDatasource: mockFirebaseAuthDatasource,
+        initialUser: null,
+      );
+
+      when(
+        () => mockFirebaseAuthDatasource.signUserWithGoogle(
+          accessToken: mockGoogleAccessToken,
+          idToken: mockGoogleIdToken,
+        ),
+      ).thenAnswer((_) {
+        mockFirebaseAuthStream.add(null);
+        return Future.value();
+      });
+
+      expect(
+        () async => await authRepository.signUserWithGoogle(
+          accessToken: mockGoogleAccessToken,
+          idToken: mockGoogleIdToken,
+        ),
+        throwsA(isA<SignInReturnNullException>()),
+      );
+    },
+  );
 }

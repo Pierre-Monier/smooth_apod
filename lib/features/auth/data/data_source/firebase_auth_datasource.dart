@@ -21,6 +21,21 @@ class FirebaseAuthDataSource {
     return userCredential.user;
   }
 
+  Future<User?> signUserWithGoogle({
+    required String accessToken,
+    required String idToken,
+  }) async {
+    final googleCredential = GoogleAuthProvider.credential(
+      accessToken: accessToken,
+      idToken: idToken,
+    );
+
+    final userCredential =
+        await _firebaseAuth.signInWithCredential(googleCredential);
+
+    return userCredential.user;
+  }
+
   Future<void> signOut() => _firebaseAuth.signOut();
 
   User? get currentUser => _firebaseAuth.currentUser;

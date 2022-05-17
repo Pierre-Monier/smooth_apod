@@ -75,6 +75,35 @@ class AuthRepository {
     }
   }
 
+  Future<AppUser> signUserWithGoogle(
+      {required String? accessToken, required String? idToken}) async {
+    try {
+      if (accessToken == null || idToken == null) {
+        throw SignInReturnNullException();
+      }
+
+      final firebaseGithubUser = await _firebaseAuthDatasource
+          .signUserWithGoogle(accessToken: accessToken, idToken: idToken);
+
+      if (firebaseGithubUser == null) {
+        throw SignInReturnNullException();
+      }
+
+      final dto = AppUserDTO.fromFirebaseUser(
+        user: firebaseGithubUser,
+      );
+
+      final newUser = dto.toAppUser;
+      _appUserStore.value = newUser;
+
+      return newUser;
+    } on SignInReturnNullException {
+      rethrow;
+    } on Exception {
+      throw GithubSignInException();
+    }
+  }
+
   Future<void> signOut() => _firebaseAuthDatasource.signOut();
 
   AppUser? get user => _appUserStore.value;
