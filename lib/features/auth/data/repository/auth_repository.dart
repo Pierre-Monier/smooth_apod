@@ -75,8 +75,10 @@ class AuthRepository {
     }
   }
 
-  Future<AppUser> signUserWithGoogle(
-      {required String? accessToken, required String? idToken}) async {
+  Future<AppUser> signUserWithGoogle({
+    required String? accessToken,
+    required String? idToken,
+  }) async {
     try {
       if (accessToken == null || idToken == null) {
         throw SignInReturnNullException();

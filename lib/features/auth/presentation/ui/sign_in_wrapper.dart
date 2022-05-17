@@ -30,7 +30,7 @@ class SignInWrapper extends ConsumerWidget {
           icon: AppIcons.googleSignIn,
           text: 'Sign in with Google',
           isLoading: signInState.googleSignIn.isLoading,
-          onTap: () {},
+          onTap: signInController.signInWithGoogle,
         ),
         AppSpacing.gapH16,
         SignInButton(

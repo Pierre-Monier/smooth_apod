@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github_sign_in/github_sign_in.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../data/repository/auth_repository.dart';
 
@@ -78,6 +79,23 @@ class SignInController extends StateNotifier<SignInState> {
       () => _authRepository.signUserWithGithub(token: result.token),
     );
     state = state.copyWith(githubSignIn: newState);
+  }
+
+  Future<void> signInWithGoogle() async {
+    state = state.copyWith(googleSignIn: const AsyncValue.loading());
+    // * Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    final newState = await AsyncValue.guard(
+      () => _authRepository.signUserWithGoogle(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      ),
+    );
+    state = state.copyWith(googleSignIn: newState);
   }
 }
 
