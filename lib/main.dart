@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'routing/app_router.dart';
+import 'style/app_theme.dart';
 
 // TODO handle top level errors with a custom widget
 void main() async {
@@ -25,6 +26,8 @@ class MyApp extends ConsumerWidget {
     return MaterialApp.router(
       routerDelegate: appRouter.routerDelegate,
       routeInformationParser: appRouter.routeInformationParser,
+      theme: lightTheme,
+      darkTheme: darkTheme,
     );
   }
 }

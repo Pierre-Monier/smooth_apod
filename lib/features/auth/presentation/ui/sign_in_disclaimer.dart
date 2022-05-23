@@ -7,5 +7,6 @@ class SignInDisclaimer extends StatelessWidget {
   Widget build(BuildContext context) => const Text(
         'Sign in is used to retrieve your data accros multiple devices.'
         ' You can stay anonymous if you want.',
+        textAlign: TextAlign.center,
       );
 }

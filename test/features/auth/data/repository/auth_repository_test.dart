@@ -7,8 +7,8 @@ import '../../../../mock/data.dart';
 
 void main() {
   setUpAll(() {
-    when(() => mockUserCredential.user).thenReturn(mockUser);
-    when(() => mockUser.uid).thenReturn(mockUID);
+    when(() => mockUserCredential.user).thenReturn(mockFirebaseUser);
+    when(() => mockFirebaseUser.uid).thenReturn(mockUID);
     when(() => mockFirebaseAuthDatasource.authStateChanges)
         .thenAnswer((_) => mockFirebaseAuthStream.stream);
     when(
@@ -16,14 +16,14 @@ void main() {
         token: mockGithubToken,
       ),
     ).thenAnswer((_) {
-      mockFirebaseAuthStream.add(mockUser);
-      return Future.value(mockUser);
+      mockFirebaseAuthStream.add(mockFirebaseUser);
+      return Future.value(mockFirebaseUser);
     });
     when(
       mockFirebaseAuthDatasource.signUserAnonymously,
     ).thenAnswer((_) {
-      mockFirebaseAuthStream.add(mockUser);
-      return Future.value(mockUser);
+      mockFirebaseAuthStream.add(mockFirebaseUser);
+      return Future.value(mockFirebaseUser);
     });
     when(
       () => mockFirebaseAuthDatasource.signUserWithGoogle(
@@ -31,8 +31,8 @@ void main() {
         idToken: mockGoogleIdToken,
       ),
     ).thenAnswer((_) {
-      mockFirebaseAuthStream.add(mockUser);
-      return Future.value(mockUser);
+      mockFirebaseAuthStream.add(mockFirebaseUser);
+      return Future.value(mockFirebaseUser);
     });
     when(
       mockFirebaseAuthDatasource.signOut,
@@ -52,9 +52,11 @@ void main() {
 
     final user = await authRepository.signUserAnonymously();
     final userFromStore = authRepository.user;
+    final userStream = authRepository.watchUser;
 
     expect(user, mockAppUser);
     expect(userFromStore, mockAppUser);
+    expect(userStream, emits(mockAppUser));
   });
 
   test('it should be able to signOut', () async {
@@ -64,7 +66,6 @@ void main() {
     );
 
     await authRepository.signUserAnonymously(); // user is signIn
-
     await authRepository.signOut();
 
     final user = authRepository.user;
@@ -92,7 +93,7 @@ void main() {
 
       expect(
         () async => await authRepository.signUserAnonymously(),
-        throwsA(isA<SignInReturnNullException>()),
+        throwsA(isA<AuthFailedException>()),
       );
     },
   );
@@ -102,13 +103,14 @@ void main() {
       firebaseAuthDatasource: mockFirebaseAuthDatasource,
       initialUser: null,
     );
-
     final user =
         await authRepository.signUserWithGithub(token: mockGithubToken);
     final userFromStore = authRepository.user;
+    final userStream = authRepository.watchUser;
 
     expect(user, mockAppUser);
     expect(userFromStore, mockAppUser);
+    expect(userStream, emits(mockAppUser));
   });
 
   test(
@@ -132,7 +134,7 @@ void main() {
       expect(
         () async =>
             await authRepository.signUserWithGithub(token: mockGithubToken),
-        throwsA(isA<SignInReturnNullException>()),
+        throwsA(isA<AuthFailedException>()),
       );
     },
   );
@@ -148,7 +150,7 @@ void main() {
 
       expect(
         () async => await authRepository.signUserWithGithub(token: null),
-        throwsA(isA<SignInReturnNullException>()),
+        throwsA(isA<AuthCancelledException>()),
       );
     },
   );
@@ -163,11 +165,12 @@ void main() {
       accessToken: mockGoogleAccessToken,
       idToken: mockGoogleIdToken,
     );
-
     final userFromStore = authRepository.user;
+    final userStream = authRepository.watchUser;
 
     expect(user, mockAppUser);
     expect(userFromStore, mockAppUser);
+    expect(userStream, emits(mockAppUser));
   });
 
   test(
@@ -185,7 +188,7 @@ void main() {
           accessToken: null,
           idToken: null,
         ),
-        throwsA(isA<SignInReturnNullException>()),
+        throwsA(isA<AuthCancelledException>()),
       );
     },
   );
@@ -214,7 +217,7 @@ void main() {
           accessToken: mockGoogleAccessToken,
           idToken: mockGoogleIdToken,
         ),
-        throwsA(isA<SignInReturnNullException>()),
+        throwsA(isA<AuthFailedException>()),
       );
     },
   );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../util/app_color.dart';
-import '../../../../util/app_spacing.dart';
+import '../../../../style/app_spacing.dart';
+import '../../../../util/opposite_background_color.dart';
 
 class SignInButton extends StatelessWidget {
   const SignInButton({
@@ -17,7 +17,7 @@ class SignInButton extends StatelessWidget {
   final VoidCallback onTap;
   final bool isLoading;
 
-  List<Widget> _getContent() => isLoading
+  List<Widget> _getContent(BuildContext context) => isLoading
       ? [
           const Expanded(
             child: Center(
@@ -33,15 +33,20 @@ class SignInButton extends StatelessWidget {
           AppSpacing.gapW16,
           icon,
           AppSpacing.gapW16,
-          Text(text),
+          Text(
+            text,
+            style: DefaultTextStyle.of(context)
+                .style
+                .copyWith(color: Theme.of(context).scaffoldBackgroundColor),
+          ),
         ];
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColor.white,
-        borderRadius: BorderRadius.circular(AppSpacing.p32),
+        color: Theme.of(context).oppositeBackgroundColor,
+        borderRadius: BorderRadius.circular(AppSpacing.p16),
       ),
       child: Material(
         color: Colors.transparent,
@@ -53,7 +58,8 @@ class SignInButton extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(AppSpacing.p16),
             child: Row(
-              children: _getContent(),
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: _getContent(context),
             ),
           ),
         ),

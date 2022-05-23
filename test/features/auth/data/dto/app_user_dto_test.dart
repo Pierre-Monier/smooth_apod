@@ -7,22 +7,22 @@ import '../../../../mock/data.dart';
 
 void main() {
   setUpAll(() {
-    when(() => mockUser.uid).thenReturn(mockUID);
+    when(() => mockFirebaseUser.uid).thenReturn(mockUID);
   });
 
   test('it can create anonymous AppUser', () async {
-    when(() => mockUser.displayName).thenReturn(null);
+    when(() => mockFirebaseUser.displayName).thenReturn(null);
 
-    final anonymousDTO = AppUserDTO.fromFirebaseUser(user: mockUser);
+    final anonymousDTO = AppUserDTO.fromFirebaseUser(user: mockFirebaseUser);
 
     expect(anonymousDTO.uid, mockUID);
     expect(anonymousDTO.username, AppUserDTO.anonymousUserName);
   });
 
   test('it can create regular AppUser', () async {
-    when(() => mockUser.displayName).thenReturn(mockUsername);
+    when(() => mockFirebaseUser.displayName).thenReturn(mockUsername);
 
-    final anonymousDTO = AppUserDTO.fromFirebaseUser(user: mockUser);
+    final anonymousDTO = AppUserDTO.fromFirebaseUser(user: mockFirebaseUser);
 
     expect(anonymousDTO.uid, mockUID);
     expect(anonymousDTO.username, mockUsername);

@@ -22,89 +22,72 @@ class AuthRepository {
   final FirebaseAuthDataSource _firebaseAuthDatasource;
   final InMemoryStore<AppUser?> _appUserStore;
 
-  Future<AppUser> signUserAnonymously() async {
-    try {
-      final firebaseAnonymousUser =
-          await _firebaseAuthDatasource.signUserAnonymously();
+  Future<AppUser> signUserAnonymously() => _withExceptionCatch(() async {
+        final firebaseAnonymousUser =
+            await _firebaseAuthDatasource.signUserAnonymously();
 
-      if (firebaseAnonymousUser == null) {
-        throw SignInReturnNullException();
-      }
+        if (firebaseAnonymousUser == null) {
+          throw AuthFailedException();
+        }
 
-      final dto = AppUserDTO.fromFirebaseUser(
-        user: firebaseAnonymousUser,
-      );
+        final dto = AppUserDTO.fromFirebaseUser(
+          user: firebaseAnonymousUser,
+        );
 
-      final newUser = dto.toAppUser;
-      _appUserStore.value = newUser;
+        final newUser = dto.toAppUser;
+        _appUserStore.value = newUser;
 
-      return newUser;
-    } on SignInReturnNullException {
-      rethrow;
-    } on Exception {
-      throw AnonymousSignInException();
-    }
-  }
+        return newUser;
+      });
 
-  // TODO: clean up this code
-  Future<AppUser> signUserWithGithub({required String? token}) async {
-    try {
-      if (token == null) {
-        throw SignInReturnNullException();
-      }
+  Future<AppUser> signUserWithGithub({required String? token}) =>
+      _withExceptionCatch(() async {
+        if (token == null) {
+          throw AuthCancelledException();
+        }
 
-      final firebaseGithubUser =
-          await _firebaseAuthDatasource.signUserWithGithub(token: token);
+        final firebaseGithubUser =
+            await _firebaseAuthDatasource.signUserWithGithub(token: token);
 
-      if (firebaseGithubUser == null) {
-        throw SignInReturnNullException();
-      }
+        if (firebaseGithubUser == null) {
+          throw AuthFailedException();
+        }
 
-      final dto = AppUserDTO.fromFirebaseUser(
-        user: firebaseGithubUser,
-      );
+        final dto = AppUserDTO.fromFirebaseUser(
+          user: firebaseGithubUser,
+        );
 
-      final newUser = dto.toAppUser;
-      _appUserStore.value = newUser;
+        final newUser = dto.toAppUser;
+        _appUserStore.value = newUser;
 
-      return newUser;
-    } on SignInReturnNullException {
-      rethrow;
-    } on Exception {
-      throw GithubSignInException();
-    }
-  }
+        return newUser;
+      });
 
   Future<AppUser> signUserWithGoogle({
     required String? accessToken,
     required String? idToken,
-  }) async {
-    try {
-      if (accessToken == null || idToken == null) {
-        throw SignInReturnNullException();
-      }
+  }) =>
+      _withExceptionCatch(() async {
+        if (accessToken == null || idToken == null) {
+          throw AuthCancelledException();
+        }
 
-      final firebaseGithubUser = await _firebaseAuthDatasource
-          .signUserWithGoogle(accessToken: accessToken, idToken: idToken);
+        final firebaseGithubUser = await _firebaseAuthDatasource
+            .signUserWithGoogle(accessToken: accessToken, idToken: idToken);
 
-      if (firebaseGithubUser == null) {
-        throw SignInReturnNullException();
-      }
+        if (firebaseGithubUser == null) {
+          throw AuthFailedException();
+        }
 
-      final dto = AppUserDTO.fromFirebaseUser(
-        user: firebaseGithubUser,
-      );
+        final dto = AppUserDTO.fromFirebaseUser(
+          user: firebaseGithubUser,
+        );
 
-      final newUser = dto.toAppUser;
-      _appUserStore.value = newUser;
+        final newUser = dto.toAppUser;
+        _appUserStore.value = newUser;
 
-      return newUser;
-    } on SignInReturnNullException {
-      rethrow;
-    } on Exception {
-      throw GithubSignInException();
-    }
-  }
+        return newUser;
+      });
 
   Future<void> signOut() => _firebaseAuthDatasource.signOut();
 
@@ -118,6 +101,16 @@ class AuthRepository {
 
     return null;
   }
+
+  Future<AppUser> _withExceptionCatch(Future<AppUser> Function() authCallback) {
+    try {
+      return authCallback();
+    } on AuthCancelledException {
+      rethrow;
+    } on Exception {
+      throw AuthFailedException;
+    }
+  }
 }
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
@@ -128,23 +121,6 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
   );
 });
 
-class SignInReturnNullException implements Exception {
-  @override
-  String toString() {
-    return 'SignInReturnNullException';
-  }
-}
+class AuthCancelledException implements Exception {}
 
-class AnonymousSignInException implements Exception {
-  @override
-  String toString() {
-    return 'AnonymousSignInException';
-  }
-}
-
-class GithubSignInException implements Exception {
-  @override
-  String toString() {
-    return 'GithubSignInException';
-  }
-}
+class AuthFailedException implements Exception {}

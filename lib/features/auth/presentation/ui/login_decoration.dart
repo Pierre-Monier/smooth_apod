@@ -1,6 +1,5 @@
+import 'package:blobs/blobs.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../util/app_color.dart';
 
 class LoginDecoration extends StatelessWidget {
   const LoginDecoration({required this.height, Key? key}) : super(key: key);
@@ -11,8 +10,25 @@ class LoginDecoration extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: height,
-      color: AppColor.main,
-      child: const Text('todo'),
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: Center(
+        child: Stack(
+          // alignment: Alignment.center,
+          children: [
+            Positioned(
+              top: 0,
+              left: 0,
+              child: Blob.random(
+                styles: BlobStyles(
+                  color: Theme.of(context).primaryColor,
+                ),
+                size: 400,
+              ),
+            ),
+            Image.asset('assets/img/logo.png'),
+          ],
+        ),
+      ),
     );
   }
 }

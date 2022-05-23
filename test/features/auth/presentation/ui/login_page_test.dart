@@ -52,7 +52,7 @@ void main() {
     );
 
     final signInButton = find.byType(SignInButton);
-    expect(signInButton, findsNWidgets(4));
+    expect(signInButton, findsNWidgets(3));
 
     await tester.tap(signInButton.first);
     await tester.pump(const Duration(seconds: 1));

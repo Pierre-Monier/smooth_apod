@@ -12,32 +12,27 @@ class SignInState {
   const SignInState({
     required this.githubSignIn,
     required this.googleSignIn,
-    required this.emailSignIn,
     required this.anonymousSignIn,
   });
 
   factory SignInState.initial() => const SignInState(
         githubSignIn: AsyncValue.data(null),
         googleSignIn: AsyncValue.data(null),
-        emailSignIn: AsyncValue.data(null),
         anonymousSignIn: AsyncValue.data(null),
       );
 
   final AsyncValue<void> githubSignIn;
   final AsyncValue<void> googleSignIn;
-  final AsyncValue<void> emailSignIn;
   final AsyncValue<void> anonymousSignIn;
 
   SignInState copyWith({
     AsyncValue<void>? githubSignIn,
     AsyncValue<void>? googleSignIn,
-    AsyncValue<void>? emailSignIn,
     AsyncValue<void>? anonymousSignIn,
   }) =>
       SignInState(
         githubSignIn: githubSignIn ?? this.githubSignIn,
         googleSignIn: googleSignIn ?? this.googleSignIn,
-        emailSignIn: emailSignIn ?? this.emailSignIn,
         anonymousSignIn: anonymousSignIn ?? this.anonymousSignIn,
       );
 }

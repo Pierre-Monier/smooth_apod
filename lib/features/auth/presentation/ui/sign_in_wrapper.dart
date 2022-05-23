@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../util/app_icons.dart';
-import '../../../../util/app_spacing.dart';
+import '../../../../style/app_icons.dart';
+import '../../../../style/app_spacing.dart';
 import '../controller/sign_in_controller.dart';
 import 'sign_in_button.dart';
 
@@ -18,7 +18,9 @@ class SignInWrapper extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SignInButton(
-          icon: AppIcons.githubSignIn,
+          icon: AppIcons.githubSignIn(
+            customColor: Theme.of(context).scaffoldBackgroundColor,
+          ),
           text: 'Sign in with GitHub',
           isLoading: signInState.githubSignIn.isLoading,
           onTap: () {
@@ -27,21 +29,18 @@ class SignInWrapper extends ConsumerWidget {
         ),
         AppSpacing.gapH16,
         SignInButton(
-          icon: AppIcons.googleSignIn,
+          icon: AppIcons.googleSignIn(
+            customColor: Theme.of(context).scaffoldBackgroundColor,
+          ),
           text: 'Sign in with Google',
           isLoading: signInState.googleSignIn.isLoading,
           onTap: signInController.signInWithGoogle,
         ),
         AppSpacing.gapH16,
         SignInButton(
-          icon: AppIcons.emailSignIn,
-          text: 'Sign in with email/password',
-          isLoading: signInState.emailSignIn.isLoading,
-          onTap: () {},
-        ),
-        AppSpacing.gapH16,
-        SignInButton(
-          icon: AppIcons.anonymousSignIn,
+          icon: AppIcons.anonymousSignIn(
+            customColor: Theme.of(context).scaffoldBackgroundColor,
+          ),
           text: 'Sign in anonymously',
           isLoading: signInState.anonymousSignIn.isLoading,
           onTap: signInController.signInAnonymously,

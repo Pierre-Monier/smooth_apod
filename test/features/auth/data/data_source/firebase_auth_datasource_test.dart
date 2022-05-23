@@ -11,7 +11,7 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(OAuthCredentialFake());
-    when(() => mockUserCredential.user).thenReturn(mockUser);
+    when(() => mockUserCredential.user).thenReturn(mockFirebaseUser);
     when(mockFirebaseAuth.signInAnonymously)
         .thenAnswer((_) => Future.value(mockUserCredential));
     when(
@@ -20,19 +20,34 @@ void main() {
       ),
     ).thenAnswer((_) => Future.value(mockUserCredential));
     when(mockFirebaseAuth.signOut).thenAnswer((_) => Future.value());
+    when(() => mockFirebaseAuth.currentUser).thenReturn(mockFirebaseUser);
+    when(mockFirebaseAuth.authStateChanges)
+        .thenAnswer((invocation) => mockFirebaseAuthStream);
+  });
+
+  test('it should be able to get current user', () {
+    final user = firebaseAuthDatasource.currentUser;
+    expect(user, mockFirebaseUser);
   });
 
   test('it should be able to signUserAnonymously', () async {
     final user = await firebaseAuthDatasource.signUserAnonymously();
 
-    expect(user, mockUser);
+    expect(user, mockFirebaseUser);
+  });
+
+  test('it should be able to stream user', () {
+    final userStream = firebaseAuthDatasource.authStateChanges;
+    mockFirebaseAuthStream.add(mockFirebaseUser);
+
+    expect(userStream, emits(mockFirebaseUser));
   });
 
   test('it should be able to sign in with github', () async {
     final user =
         await firebaseAuthDatasource.signUserWithGithub(token: mockGithubToken);
 
-    expect(user, mockUser);
+    expect(user, mockFirebaseUser);
   });
 
   test('it should be able to sign in with google', () async {
@@ -41,7 +56,7 @@ void main() {
       idToken: mockGoogleIdToken,
     );
 
-    expect(user, mockUser);
+    expect(user, mockFirebaseUser);
   });
 
   test('it should be able to sign out', () async {

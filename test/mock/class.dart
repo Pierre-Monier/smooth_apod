@@ -8,7 +8,7 @@ class MockFirebaseAuth extends Mock implements FirebaseAuth {}
 class MockFirebaseAuthDatasource extends Mock
     implements FirebaseAuthDataSource {}
 
-class MockUser extends Mock implements User {}
+class MockFirebaseUser extends Mock implements User {}
 
 class MockUserCredential extends Mock implements UserCredential {}
 
@@ -18,6 +18,6 @@ class OAuthCredentialFake extends Fake implements OAuthCredential {}
 
 final mockFirebaseAuth = MockFirebaseAuth();
 final mockFirebaseAuthDatasource = MockFirebaseAuthDatasource();
-final mockUser = MockUser();
+final mockFirebaseUser = MockFirebaseUser();
 final mockUserCredential = MockUserCredential();
 final mockFirebaseAuthStream = BehaviorSubject<User?>();

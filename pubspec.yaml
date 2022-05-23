@@ -46,6 +46,7 @@ dependencies:
   github_sign_in: ^0.0.5-dev.4
   flutter_dotenv: ^5.0.2
   google_sign_in: ^5.3.1
+  blobs: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +73,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - .env
+    - assets/img/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
