@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../style/app_icons.dart';
 import '../../../../style/app_spacing.dart';
+import '../../util/github_sign_in_provider.dart';
+import '../../util/google_sign_in_provider.dart';
 import '../controller/sign_in_controller.dart';
 import 'sign_in_button.dart';
 
@@ -13,6 +15,8 @@ class SignInWrapper extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final signInController = ref.watch(signInControllerProvider.notifier);
     final signInState = ref.watch(signInControllerProvider);
+    final gitHubSignIn = ref.watch(githubSignInProvider);
+    final googleSignIn = ref.watch(googleSignInProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -24,7 +28,10 @@ class SignInWrapper extends ConsumerWidget {
           text: 'Sign in with GitHub',
           isLoading: signInState.githubSignIn.isLoading,
           onTap: () {
-            signInController.signInWithGithub(context: context);
+            signInController.signInWithGithub(
+              context: context,
+              githubSignIn: gitHubSignIn,
+            );
           },
         ),
         AppSpacing.gapH16,
@@ -34,7 +41,9 @@ class SignInWrapper extends ConsumerWidget {
           ),
           text: 'Sign in with Google',
           isLoading: signInState.googleSignIn.isLoading,
-          onTap: signInController.signInWithGoogle,
+          onTap: () {
+            signInController.signInWithGoogle(googleSignIn: googleSignIn);
+          },
         ),
         AppSpacing.gapH16,
         SignInButton(

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github_sign_in/github_sign_in.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -38,11 +37,10 @@ class SignInState {
 }
 
 class SignInController extends StateNotifier<SignInState> {
-  SignInController(
-    SignInState initial, {
+  SignInController({
     required AuthRepository authRepository,
   })  : _authRepository = authRepository,
-        super(initial);
+        super(SignInState.initial());
 
   final AuthRepository _authRepository;
 
@@ -59,16 +57,13 @@ class SignInController extends StateNotifier<SignInState> {
     state = state.copyWith(anonymousSignIn: newState);
   }
 
-  Future<void> signInWithGithub({required BuildContext context}) async {
+  Future<void> signInWithGithub({
+    required BuildContext context,
+    required GitHubSignIn githubSignIn,
+  }) async {
     state = state.copyWith(githubSignIn: const AsyncValue.loading());
 
-    final GitHubSignIn gitHubSignIn = GitHubSignIn(
-      clientId: dotenv.env['GITHUB_CLIENT_ID'] ?? '',
-      clientSecret: dotenv.env['GITHUB_CLIENT_SECRET'] ?? '',
-      redirectUrl: dotenv.env['GITHUB_REDIRECT_URL'] ?? '',
-    );
-
-    final result = await gitHubSignIn.signIn(context);
+    final result = await githubSignIn.signIn(context);
 
     final newState = await AsyncValue.guard(
       () => _authRepository.signUserWithGithub(token: result.token),
@@ -76,10 +71,12 @@ class SignInController extends StateNotifier<SignInState> {
     state = state.copyWith(githubSignIn: newState);
   }
 
-  Future<void> signInWithGoogle() async {
+  Future<void> signInWithGoogle({
+    required GoogleSignIn googleSignIn,
+  }) async {
     state = state.copyWith(googleSignIn: const AsyncValue.loading());
     // * Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
     final GoogleSignInAuthentication? googleAuth =
         await googleUser?.authentication;
@@ -99,7 +96,6 @@ final signInControllerProvider =
   final authRepository = ref.watch(authRepositoryProvider);
 
   return SignInController(
-    SignInState.initial(),
     authRepository: authRepository,
   );
 });

@@ -22,7 +22,7 @@ class AuthRepository {
   final FirebaseAuthDataSource _firebaseAuthDatasource;
   final InMemoryStore<AppUser?> _appUserStore;
 
-  Future<AppUser> signUserAnonymously() => _withExceptionCatch(() async {
+  Future<void> signUserAnonymously() => _withExceptionCatch(() async {
         final firebaseAnonymousUser =
             await _firebaseAuthDatasource.signUserAnonymously();
 
@@ -36,11 +36,9 @@ class AuthRepository {
 
         final newUser = dto.toAppUser;
         _appUserStore.value = newUser;
-
-        return newUser;
       });
 
-  Future<AppUser> signUserWithGithub({required String? token}) =>
+  Future<void> signUserWithGithub({required String? token}) =>
       _withExceptionCatch(() async {
         if (token == null) {
           throw AuthCancelledException();
@@ -59,11 +57,9 @@ class AuthRepository {
 
         final newUser = dto.toAppUser;
         _appUserStore.value = newUser;
-
-        return newUser;
       });
 
-  Future<AppUser> signUserWithGoogle({
+  Future<void> signUserWithGoogle({
     required String? accessToken,
     required String? idToken,
   }) =>
@@ -85,8 +81,6 @@ class AuthRepository {
 
         final newUser = dto.toAppUser;
         _appUserStore.value = newUser;
-
-        return newUser;
       });
 
   Future<void> signOut() => _firebaseAuthDatasource.signOut();
@@ -102,7 +96,7 @@ class AuthRepository {
     return null;
   }
 
-  Future<AppUser> _withExceptionCatch(Future<AppUser> Function() authCallback) {
+  Future<void> _withExceptionCatch(Future<void> Function() authCallback) {
     try {
       return authCallback();
     } on AuthCancelledException {

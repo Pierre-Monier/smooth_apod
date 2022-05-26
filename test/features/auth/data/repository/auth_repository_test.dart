@@ -50,11 +50,10 @@ void main() {
       initialUser: null,
     );
 
-    final user = await authRepository.signUserAnonymously();
+    await authRepository.signUserAnonymously();
     final userFromStore = authRepository.user;
     final userStream = authRepository.watchUser;
 
-    expect(user, mockAppUser);
     expect(userFromStore, mockAppUser);
     expect(userStream, emits(mockAppUser));
   });
@@ -103,12 +102,11 @@ void main() {
       firebaseAuthDatasource: mockFirebaseAuthDatasource,
       initialUser: null,
     );
-    final user =
-        await authRepository.signUserWithGithub(token: mockGithubToken);
+
+    await authRepository.signUserWithGithub(token: mockGithubToken);
     final userFromStore = authRepository.user;
     final userStream = authRepository.watchUser;
 
-    expect(user, mockAppUser);
     expect(userFromStore, mockAppUser);
     expect(userStream, emits(mockAppUser));
   });
@@ -161,14 +159,13 @@ void main() {
       initialUser: null,
     );
 
-    final user = await authRepository.signUserWithGoogle(
+    await authRepository.signUserWithGoogle(
       accessToken: mockGoogleAccessToken,
       idToken: mockGoogleIdToken,
     );
     final userFromStore = authRepository.user;
     final userStream = authRepository.watchUser;
 
-    expect(user, mockAppUser);
     expect(userFromStore, mockAppUser);
     expect(userStream, emits(mockAppUser));
   });
