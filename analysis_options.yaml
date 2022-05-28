@@ -3,7 +3,7 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   exclude:
     - "**/*generated_plugin_registrant*"
-    - "**/mock/**"
+    # - "**/mock/**"
   strong-mode:
     implicit-casts: false
   errors:

@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 const mockCopyright = 'Martin Pugh';
 final mockDate = DateTime(2022);
 const mockExplanation =
