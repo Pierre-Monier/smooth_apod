@@ -2,7 +2,7 @@ import 'package:blobs/blobs.dart';
 import 'package:flutter/material.dart';
 
 class LoginDecoration extends StatelessWidget {
-  const LoginDecoration({required this.height, Key? key}) : super(key: key);
+  const LoginDecoration({required this.height, super.key});
 
   final double height;
 

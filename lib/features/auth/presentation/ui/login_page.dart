@@ -8,7 +8,7 @@ import 'login_decoration.dart';
 import 'sign_in_form.dart';
 
 class LoginPage extends ConsumerWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   bool _shouldShowSnackbar({
     required AsyncValue<void>? previous,

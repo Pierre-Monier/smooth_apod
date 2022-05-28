@@ -5,7 +5,7 @@ import 'sign_in_disclaimer.dart';
 import 'sign_in_wrapper.dart';
 
 class SignInForm extends StatelessWidget {
-  const SignInForm({Key? key}) : super(key: key);
+  const SignInForm({super.key});
 
   @override
   Widget build(BuildContext context) => Padding(

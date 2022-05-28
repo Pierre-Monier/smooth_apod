@@ -9,8 +9,8 @@ class SignInButton extends StatelessWidget {
     required this.text,
     required this.onTap,
     required this.isLoading,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final Widget icon;
   final String text;

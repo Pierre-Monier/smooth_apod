@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SignInDisclaimer extends StatelessWidget {
-  const SignInDisclaimer({Key? key}) : super(key: key);
+  const SignInDisclaimer({super.key});
 
   @override
   Widget build(BuildContext context) => const Text(

@@ -34,8 +34,8 @@ class AuthRepository {
           user: firebaseAnonymousUser,
         );
 
-        final newUser = dto.toAppUser;
-        _appUserStore.value = newUser;
+        // final newUser = dto.toAppUser;
+        _appUserStore.value = dto;
       });
 
   Future<void> signUserWithGithub({required String? token}) =>
@@ -55,8 +55,8 @@ class AuthRepository {
           user: firebaseGithubUser,
         );
 
-        final newUser = dto.toAppUser;
-        _appUserStore.value = newUser;
+        // final newUser = dto.toAppUser;
+        _appUserStore.value = dto;
       });
 
   Future<void> signUserWithGoogle({
@@ -79,8 +79,8 @@ class AuthRepository {
           user: firebaseGithubUser,
         );
 
-        final newUser = dto.toAppUser;
-        _appUserStore.value = newUser;
+        // final newUser = dto.toAppUser;
+        _appUserStore.value = dto;
       });
 
   Future<void> signOut() => _firebaseAuthDatasource.signOut();
@@ -90,7 +90,8 @@ class AuthRepository {
 
   static AppUser? _convertFirebaseUser({required User? user}) {
     if (user != null) {
-      return AppUserDTO.fromFirebaseUser(user: user).toAppUser;
+      return AppUserDTO.fromFirebaseUser(user: user);
+      // return AppUserDTO.fromFirebaseUser(user: user).toAppUser;
     }
 
     return null;

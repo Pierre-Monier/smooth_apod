@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class AppUser extends Equatable {
+abstract class AppUser extends Equatable {
   const AppUser({required this.uid, required this.username});
 
   final String uid;

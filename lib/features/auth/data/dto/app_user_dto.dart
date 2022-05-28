@@ -4,9 +4,9 @@ import '../../model/app_user.dart';
 
 class AppUserDTO extends AppUser {
   const AppUserDTO({
-    required String uid,
-    required String username,
-  }) : super(uid: uid, username: username);
+    required super.uid,
+    required super.username,
+  });
 
   factory AppUserDTO.fromFirebaseUser({required User user}) {
     return AppUserDTO(
@@ -17,6 +17,6 @@ class AppUserDTO extends AppUser {
 
   static const anonymousUserName = 'anonymous';
 
-  // * convert the DTO to an AppUser entity
-  AppUser get toAppUser => AppUser(uid: uid, username: username);
+  // // * convert the DTO to an AppUser entity
+  // AppUser get toAppUser => AppUser(uid: uid, username: username);
 }

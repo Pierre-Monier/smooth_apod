@@ -4,7 +4,7 @@ import 'package:smooth_apod/features/auth/model/app_user.dart';
 const mockUID = 'some_random_uid';
 const mockUsername = 'fakeUsername';
 const mockAppUser =
-    AppUser(uid: mockUID, username: AppUserDTO.anonymousUserName);
+    AppUserDTO(uid: mockUID, username: AppUserDTO.anonymousUserName);
 const mockGithubToken = 'fakegithubtoken';
 const mockGoogleAccessToken = 'fakegoogleaccesstoken';
 const mockGoogleIdToken = 'fakegoogleidtoken';

@@ -9,7 +9,7 @@ import '../controller/sign_in_controller.dart';
 import 'sign_in_button.dart';
 
 class SignInWrapper extends ConsumerWidget {
-  const SignInWrapper({Key? key}) : super(key: key);
+  const SignInWrapper({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

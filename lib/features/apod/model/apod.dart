@@ -1,7 +1,7 @@
 import 'media_type.dart';
 
-class APOD {
-  APOD({
+abstract class Apod {
+  Apod({
     required this.copyright,
     required this.date,
     required this.explanation,
@@ -12,7 +12,7 @@ class APOD {
     this.thumbnailUrl,
   });
 
-  final String copyright;
+  final String? copyright;
   final DateTime date;
   final String explanation;
   final MediaType mediaType;

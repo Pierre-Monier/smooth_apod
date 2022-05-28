@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../auth/data/repository/auth_repository.dart';
 
 class ApodPage extends ConsumerWidget {
-  const ApodPage({Key? key}) : super(key: key);
+  const ApodPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
