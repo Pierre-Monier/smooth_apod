@@ -6,7 +6,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'routing/app_router.dart';
 import 'style/app_theme.dart';
 
-// TODO handle top level errors with a custom widget
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

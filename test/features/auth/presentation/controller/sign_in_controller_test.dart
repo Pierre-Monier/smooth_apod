@@ -4,8 +4,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:smooth_apod/features/auth/data/repository/auth_repository.dart';
 import 'package:smooth_apod/features/auth/presentation/controller/sign_in_controller.dart';
 
-import '../../../../mock/class.dart';
-import '../../../../mock/data.dart';
+import '../../mock/class.dart';
+import '../../mock/data.dart';
 
 const loadingDelay = Duration(seconds: 1);
 const loadingState = AsyncLoading<void>();

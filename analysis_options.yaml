@@ -1,6 +1,9 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
+  exclude:
+    - "**/*generated_plugin_registrant*"
+    - "**/mock/**"
   strong-mode:
     implicit-casts: false
   errors:

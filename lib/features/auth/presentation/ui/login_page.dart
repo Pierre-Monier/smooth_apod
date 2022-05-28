@@ -7,7 +7,6 @@ import '../controller/sign_in_controller.dart';
 import 'login_decoration.dart';
 import 'sign_in_form.dart';
 
-// TODO listen to controller error and display toast
 class LoginPage extends ConsumerWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -38,7 +37,7 @@ class LoginPage extends ConsumerWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             getSnackbar(
               type: SnackbarType.error,
-              text: 'Bad',
+              text: 'Auth failed',
             ),
           );
         }

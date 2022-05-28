@@ -9,7 +9,7 @@ import 'package:smooth_apod/features/auth/presentation/ui/login_decoration.dart'
 import 'package:smooth_apod/features/auth/presentation/ui/login_page.dart';
 import 'package:smooth_apod/features/auth/presentation/ui/sign_in_button.dart';
 
-import '../../../../mock/class.dart';
+import '../../mock/class.dart';
 
 void main() {
   setUpAll(() async {
