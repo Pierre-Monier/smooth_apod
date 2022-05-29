@@ -1,5 +1,5 @@
-import '../../../features/apod/data/dto/apod_dto.dart';
-import '../../../features/apod/model/apod.dart';
+import '../dto/apod_dto.dart';
+import '../../model/apod.dart';
 import '../datasource/apod_datasource.dart';
 
 class ApodRepository {

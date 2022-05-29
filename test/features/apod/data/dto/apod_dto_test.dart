@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:smooth_apod/features/apod/data/dto/apod_dto.dart';
-import 'package:smooth_apod/features/apod/model/media_type.dart';
+import 'package:smooth_apod/shared/data/dto/apod_dto.dart';
+import 'package:smooth_apod/shared/model/media_type.dart';
 
 void main() {
   test('it can parse APOD from json when the MediaType is an image', () {

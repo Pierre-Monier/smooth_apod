@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:smooth_apod/features/apod/model/media_type.dart';
 import 'package:smooth_apod/shared/data/repository/apod_repository.dart';
+import 'package:smooth_apod/shared/model/media_type.dart';
 
 import '../../mock/data.dart';
 

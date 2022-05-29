@@ -1,7 +1,6 @@
 import '../../model/apod.dart';
 import '../../model/media_type.dart';
 
-// TODO this should be in shared folder
 class ApodDTO extends Apod {
   ApodDTO({
     required super.copyright,
