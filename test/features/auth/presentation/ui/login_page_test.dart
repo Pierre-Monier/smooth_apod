@@ -4,7 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:smooth_apod/features/auth/data/data_source/firebase_auth_datasource.dart';
+import 'package:smooth_apod/features/auth/data/datasource/firebase_auth_datasource.dart';
 import 'package:smooth_apod/features/auth/presentation/ui/login_decoration.dart';
 import 'package:smooth_apod/features/auth/presentation/ui/login_page.dart';
 import 'package:smooth_apod/features/auth/presentation/ui/sign_in_button.dart';

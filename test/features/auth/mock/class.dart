@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:github_sign_in/github_sign_in.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:smooth_apod/features/auth/data/data_source/firebase_auth_datasource.dart';
+import 'package:smooth_apod/features/auth/data/datasource/firebase_auth_datasource.dart';
 import 'package:smooth_apod/features/auth/data/repository/auth_repository.dart';
 
 class MockFirebaseAuth extends Mock implements FirebaseAuth {}

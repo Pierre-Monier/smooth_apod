@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../util/in_memory_store.dart';
 import '../../model/app_user.dart';
-import '../data_source/firebase_auth_datasource.dart';
+import '../datasource/firebase_auth_datasource.dart';
 import '../dto/app_user_dto.dart';
 
 class AuthRepository {
@@ -30,12 +30,11 @@ class AuthRepository {
           throw AuthFailedException();
         }
 
-        final dto = AppUserDTO.fromFirebaseUser(
+        final appUser = AppUserDTO.fromFirebaseUser(
           user: firebaseAnonymousUser,
         );
 
-        // final newUser = dto.toAppUser;
-        _appUserStore.value = dto;
+        _appUserStore.value = appUser;
       });
 
   Future<void> signUserWithGithub({required String? token}) =>
@@ -51,12 +50,11 @@ class AuthRepository {
           throw AuthFailedException();
         }
 
-        final dto = AppUserDTO.fromFirebaseUser(
+        final appUser = AppUserDTO.fromFirebaseUser(
           user: firebaseGithubUser,
         );
 
-        // final newUser = dto.toAppUser;
-        _appUserStore.value = dto;
+        _appUserStore.value = appUser;
       });
 
   Future<void> signUserWithGoogle({
@@ -75,12 +73,11 @@ class AuthRepository {
           throw AuthFailedException();
         }
 
-        final dto = AppUserDTO.fromFirebaseUser(
+        final appUser = AppUserDTO.fromFirebaseUser(
           user: firebaseGithubUser,
         );
 
-        // final newUser = dto.toAppUser;
-        _appUserStore.value = dto;
+        _appUserStore.value = appUser;
       });
 
   Future<void> signOut() => _firebaseAuthDatasource.signOut();
