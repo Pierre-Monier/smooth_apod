@@ -5,6 +5,8 @@ import 'package:smooth_apod/features/auth/data/repository/auth_repository.dart';
 import '../../mock/data.dart';
 
 void main() {
+  late AuthRepository authRepository;
+
   setUpAll(() {
     when(() => mockUserCredential.user).thenReturn(mockFirebaseUser);
     when(() => mockFirebaseUser.uid).thenReturn(mockUID);
@@ -41,14 +43,16 @@ void main() {
     });
   });
 
-  tearDownAll(mockFirebaseAuthStream.close);
-
-  test('it should be able to sign user anonymously', () async {
-    final authRepository = AuthRepository(
+  setUp(() {
+    authRepository = AuthRepository(
       firebaseAuthDatasource: mockFirebaseAuthDatasource,
       initialUser: null,
     );
+  });
 
+  tearDownAll(mockFirebaseAuthStream.close);
+
+  test('it should be able to sign user anonymously', () async {
     await authRepository.signUserAnonymously();
     final userFromStore = authRepository.user;
     final userStream = authRepository.watchUser;
@@ -58,11 +62,6 @@ void main() {
   });
 
   test('it should be able to signOut', () async {
-    final authRepository = AuthRepository(
-      firebaseAuthDatasource: mockFirebaseAuthDatasource,
-      initialUser: null,
-    );
-
     await authRepository.signUserAnonymously(); // user is signIn
     await authRepository.signOut();
 
@@ -77,11 +76,6 @@ void main() {
     'it should throw a SignInReturnNullException'
     ' if anonymous sign in return null',
     () {
-      final authRepository = AuthRepository(
-        firebaseAuthDatasource: mockFirebaseAuthDatasource,
-        initialUser: null,
-      );
-
       when(
         mockFirebaseAuthDatasource.signUserAnonymously,
       ).thenAnswer((_) {
@@ -97,11 +91,6 @@ void main() {
   );
 
   test('it should be able to sign in with github', () async {
-    final authRepository = AuthRepository(
-      firebaseAuthDatasource: mockFirebaseAuthDatasource,
-      initialUser: null,
-    );
-
     await authRepository.signUserWithGithub(token: mockGithubToken);
     final userFromStore = authRepository.user;
     final userStream = authRepository.watchUser;
@@ -114,11 +103,6 @@ void main() {
     'it should throw a SignInReturnNullException'
     ' if github sign in get a null token parameter',
     () {
-      final authRepository = AuthRepository(
-        firebaseAuthDatasource: mockFirebaseAuthDatasource,
-        initialUser: null,
-      );
-
       when(
         () => mockFirebaseAuthDatasource.signUserWithGithub(
           token: mockGithubToken,
@@ -140,11 +124,6 @@ void main() {
     'it should throw a SignInReturnNullException on github sign in'
     ' if firebase datasource return a null user',
     () {
-      final authRepository = AuthRepository(
-        firebaseAuthDatasource: mockFirebaseAuthDatasource,
-        initialUser: null,
-      );
-
       expect(
         () async => await authRepository.signUserWithGithub(token: null),
         throwsA(isA<AuthCancelledException>()),
@@ -153,11 +132,6 @@ void main() {
   );
 
   test('it should be able to sign in with google', () async {
-    final authRepository = AuthRepository(
-      firebaseAuthDatasource: mockFirebaseAuthDatasource,
-      initialUser: null,
-    );
-
     await authRepository.signUserWithGoogle(
       accessToken: mockGoogleAccessToken,
       idToken: mockGoogleIdToken,
@@ -174,11 +148,6 @@ void main() {
     ' if google sign in get a null accessToken parameter or'
     ' a null idToken parameter',
     () {
-      final authRepository = AuthRepository(
-        firebaseAuthDatasource: mockFirebaseAuthDatasource,
-        initialUser: null,
-      );
-
       expect(
         () async => await authRepository.signUserWithGoogle(
           accessToken: null,
@@ -193,11 +162,6 @@ void main() {
     'it should throw a SignInReturnNullException on google sign in'
     ' if firebase datasource return a null user',
     () {
-      final authRepository = AuthRepository(
-        firebaseAuthDatasource: mockFirebaseAuthDatasource,
-        initialUser: null,
-      );
-
       when(
         () => mockFirebaseAuthDatasource.signUserWithGoogle(
           accessToken: mockGoogleAccessToken,

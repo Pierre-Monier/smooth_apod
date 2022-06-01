@@ -15,24 +15,26 @@ final errorPredicate = predicate<AsyncValue<void>>((value) {
 });
 
 void main() {
+  late SignInController signInController;
+
   setUpAll(() {
     when(() => mockGithubSignIn.signIn(mockBuildContext))
         .thenAnswer((_) => Future.value(mockGithubSignInResult));
     when(() => mockGithubSignInResult.token).thenReturn(mockGithubToken);
     when(mockGoogleSignIn.signIn).thenAnswer((_) => Future.value());
   });
-  test('it should have an defined initial state', () async {
-    final signInController =
-        SignInController(authRepository: mockAuthRepository);
 
+  setUp(() {
+    signInController = SignInController(authRepository: mockAuthRepository);
+  });
+
+  test('it should have an defined initial state', () async {
     expect(signInController.debugState, SignInState.initial());
   });
 
   test(
       'it should emit a AsyncLoading anonymousSignIn state then a AsyncData'
       ' anonymousSignIn state when signInAnonymously', () async {
-    final signInController =
-        SignInController(authRepository: mockAuthRepository);
     when(mockAuthRepository.signUserAnonymously).thenAnswer(
       (_) => Future.value(),
     );
@@ -51,8 +53,6 @@ void main() {
   test(
       'it should emit a AsyncLoading anonymousSignIn state then an AsyncError'
       ' anonymousSignIn state when signInAnonymously failed', () async {
-    final signInController =
-        SignInController(authRepository: mockAuthRepository);
     when(mockAuthRepository.signUserAnonymously).thenAnswer(
       (_) => Future.delayed(throw AuthFailedException),
     );
@@ -68,8 +68,6 @@ void main() {
   test(
       'it should emit a AsyncLoading githubSignIn state then a AsyncData'
       ' githubSignIn state when signInAnonymously', () async {
-    final signInController =
-        SignInController(authRepository: mockAuthRepository);
     when(() => mockAuthRepository.signUserWithGithub(token: mockGithubToken))
         .thenAnswer(
       (_) => Future.value(),
@@ -92,8 +90,6 @@ void main() {
   test(
       'it should emit a AsyncLoading githubSignIn state then an AsyncError'
       ' githubSignIn state when signInWithGithub failed', () async {
-    final signInController =
-        SignInController(authRepository: mockAuthRepository);
     when(() => mockAuthRepository.signUserWithGithub(token: mockGithubToken))
         .thenAnswer(
       (_) => Future.delayed(throw AuthFailedException),
@@ -113,8 +109,6 @@ void main() {
   test(
       'it should emit a AsyncLoading googleSignIn state then a AsyncData'
       ' googleSignIn state when signInWithGoogle', () async {
-    final signInController =
-        SignInController(authRepository: mockAuthRepository);
     when(
       () => mockAuthRepository.signUserWithGoogle(
         accessToken: null,
@@ -140,8 +134,6 @@ void main() {
   test(
       'it should emit a AsyncLoading googleSignIn state then an AsyncError'
       ' googleSignIn state when signInWIthGoogle failed', () async {
-    final signInController =
-        SignInController(authRepository: mockAuthRepository);
     when(
       () => mockAuthRepository.signUserWithGoogle(
         accessToken: null,
