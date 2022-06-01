@@ -6,9 +6,13 @@ import 'package:smooth_apod/features/auth/presentation/controller/sign_in_contro
 
 import '../../mock/data.dart';
 
-const loadingDelay = Duration(seconds: 1);
 const loadingState = AsyncLoading<void>();
 const dataState = AsyncData<void>(null);
+final errorPredicate = predicate<AsyncValue<void>>((value) {
+  expect(value.hasError, true);
+  expect(value, isA<AsyncError>());
+  return true;
+});
 
 void main() {
   setUpAll(() {
@@ -30,22 +34,18 @@ void main() {
     final signInController =
         SignInController(authRepository: mockAuthRepository);
     when(mockAuthRepository.signUserAnonymously).thenAnswer(
-      (_) => Future.delayed(loadingDelay, () {}),
+      (_) => Future.value(),
     );
 
-    signInController.signInAnonymously();
-
-    expect(
-      signInController.debugState.anonymousSignIn,
-      loadingState,
+    expectLater(
+      signInController.stream.map<AsyncValue>((event) => event.anonymousSignIn),
+      emitsInOrder([
+        loadingState,
+        dataState,
+      ]),
     );
 
-    await Future.delayed(loadingDelay);
-
-    expect(
-      signInController.debugState.anonymousSignIn,
-      dataState,
-    );
+    await signInController.signInAnonymously();
   });
 
   test(
@@ -54,26 +54,15 @@ void main() {
     final signInController =
         SignInController(authRepository: mockAuthRepository);
     when(mockAuthRepository.signUserAnonymously).thenAnswer(
-      (_) => Future.delayed(loadingDelay, throw AuthFailedException),
+      (_) => Future.delayed(throw AuthFailedException),
     );
 
-    signInController.signInAnonymously();
-
-    expect(
-      signInController.debugState.anonymousSignIn,
-      loadingState,
+    expectLater(
+      signInController.stream.map<AsyncValue>((event) => event.anonymousSignIn),
+      emitsInOrder([loadingState, errorPredicate]),
     );
 
-    await Future.delayed(loadingDelay);
-
-    expect(
-      signInController.debugState.anonymousSignIn.hasError,
-      true,
-    );
-    expect(
-      signInController.debugState.anonymousSignIn,
-      isA<AsyncError>(),
-    );
+    await signInController.signInAnonymously();
   });
 
   test(
@@ -86,21 +75,17 @@ void main() {
       (_) => Future.value(),
     );
 
-    signInController.signInWithGithub(
+    expectLater(
+      signInController.stream.map<AsyncValue>((event) => event.githubSignIn),
+      emitsInOrder([
+        loadingState,
+        dataState,
+      ]),
+    );
+
+    await signInController.signInWithGithub(
       context: mockBuildContext,
       githubSignIn: mockGithubSignIn,
-    );
-
-    expect(
-      signInController.debugState.githubSignIn,
-      loadingState,
-    );
-
-    await Future.delayed(loadingDelay * 2);
-
-    expect(
-      signInController.debugState.githubSignIn,
-      dataState,
     );
   });
 
@@ -111,28 +96,17 @@ void main() {
         SignInController(authRepository: mockAuthRepository);
     when(() => mockAuthRepository.signUserWithGithub(token: mockGithubToken))
         .thenAnswer(
-      (_) => Future.delayed(loadingDelay, throw AuthFailedException),
+      (_) => Future.delayed(throw AuthFailedException),
     );
 
-    signInController.signInWithGithub(
+    expectLater(
+      signInController.stream.map<AsyncValue>((event) => event.githubSignIn),
+      emitsInOrder([loadingState, errorPredicate]),
+    );
+
+    await signInController.signInWithGithub(
       context: mockBuildContext,
       githubSignIn: mockGithubSignIn,
-    );
-
-    expect(
-      signInController.debugState.githubSignIn,
-      loadingState,
-    );
-
-    await Future.delayed(loadingDelay);
-
-    expect(
-      signInController.debugState.githubSignIn.hasError,
-      true,
-    );
-    expect(
-      signInController.debugState.githubSignIn,
-      isA<AsyncError>(),
     );
   });
 
@@ -150,20 +124,16 @@ void main() {
       (_) => Future.value(),
     );
 
-    signInController.signInWithGoogle(
+    expectLater(
+      signInController.stream.map<AsyncValue>((event) => event.googleSignIn),
+      emitsInOrder([
+        loadingState,
+        dataState,
+      ]),
+    );
+
+    await signInController.signInWithGoogle(
       googleSignIn: mockGoogleSignIn,
-    );
-
-    expect(
-      signInController.debugState.googleSignIn,
-      loadingState,
-    );
-
-    await Future.delayed(loadingDelay * 2);
-
-    expect(
-      signInController.debugState.googleSignIn,
-      dataState,
     );
   });
 
@@ -178,27 +148,16 @@ void main() {
         idToken: null,
       ),
     ).thenAnswer(
-      (_) => Future.delayed(loadingDelay, throw AuthFailedException),
+      (_) => Future.delayed(throw AuthFailedException),
     );
 
-    signInController.signInWithGoogle(
+    expectLater(
+      signInController.stream.map<AsyncValue>((event) => event.googleSignIn),
+      emitsInOrder([loadingState, errorPredicate]),
+    );
+
+    await signInController.signInWithGoogle(
       googleSignIn: mockGoogleSignIn,
-    );
-
-    expect(
-      signInController.debugState.googleSignIn,
-      loadingState,
-    );
-
-    await Future.delayed(loadingDelay);
-
-    expect(
-      signInController.debugState.googleSignIn.hasError,
-      true,
-    );
-    expect(
-      signInController.debugState.googleSignIn,
-      isA<AsyncError>(),
     );
   });
 }
