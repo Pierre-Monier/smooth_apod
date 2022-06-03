@@ -2,6 +2,8 @@
 
 A new Flutter project.
 
+[![GitHub license](https://img.shields.io/github/license/Pierre-Monier/smooth_apod)](https://github.com/Pierre-Monier/smooth_apod/blob/master/LICENSE)
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
