@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../util/in_memory_store.dart';
+import '../../../util/in_memory_store.dart';
 import '../../model/app_user.dart';
 import '../datasource/firebase_auth_datasource.dart';
 import '../dto/app_user_dto.dart';
@@ -111,6 +111,15 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
     firebaseAuthDatasource: firebaseAuthDatasource,
     initialUser: firebaseAuthDatasource.currentUser,
   );
+});
+
+final authStreamProvidier = StreamProvider<AppUser?>((ref) {
+  final authRepository = ref.watch(authRepositoryProvider);
+  return authRepository.watchUser;
+});
+
+final currentUserProvider = Provider<AppUser?>((ref) {
+  return ref.watch(authStreamProvidier).value;
 });
 
 class AuthCancelledException implements Exception {}

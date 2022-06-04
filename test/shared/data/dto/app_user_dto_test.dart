@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:smooth_apod/features/auth/data/dto/app_user_dto.dart';
+import 'package:smooth_apod/shared/data/dto/app_user_dto.dart';
 
 import '../../mock/data.dart';
 

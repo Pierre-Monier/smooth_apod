@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../auth/data/repository/auth_repository.dart';
+import '../controller/apod_controller.dart';
 
 class ApodPage extends ConsumerWidget {
   const ApodPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authRepository = ref.watch(authRepositoryProvider);
+    final apodState = ref.watch(apodControllerProvider);
 
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text('Apod Page'),
-          ElevatedButton(
-            onPressed: authRepository.signOut,
-            child: const Text('Sign Out'),
-          )
-        ],
+      body: apodState.when(
+        data: ((data) => Center(
+              child: Text(data.title),
+            )),
+        error: (_, __) => const Center(
+          child: Text('Error'),
+        ),
+        loading: () => const Center(child: CircularProgressIndicator()),
       ),
     );
   }

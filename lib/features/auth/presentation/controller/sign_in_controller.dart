@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github_sign_in/github_sign_in.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../../data/repository/auth_repository.dart';
+import '../../../../shared/data/repository/auth_repository.dart';
 
 class SignInState {
   const SignInState({

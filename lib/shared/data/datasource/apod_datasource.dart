@@ -1,3 +1,6 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../client/dio_client.dart';
 import '../client/http_client.dart';
 
 class ApodDatasource {
@@ -19,3 +22,9 @@ class ApodDatasource {
     );
   }
 }
+
+final apodDatasourceProvider = Provider<ApodDatasource>((ref) {
+  final httpClientProvider = ref.watch(dioClientProvider);
+
+  return ApodDatasource(httpClient: httpClientProvider);
+});

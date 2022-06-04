@@ -1,3 +1,5 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../dto/apod_dto.dart';
 import '../../model/apod.dart';
 import '../datasource/apod_datasource.dart';
@@ -24,3 +26,8 @@ class ApodRepository {
 class ApodFetchFailedException implements Exception {
   const ApodFetchFailedException();
 }
+
+final apodRepositoryProvider = Provider<ApodRepository>((ref) {
+  final apodDatasource = ref.watch(apodDatasourceProvider);
+  return ApodRepository(apodDatasource: apodDatasource);
+});

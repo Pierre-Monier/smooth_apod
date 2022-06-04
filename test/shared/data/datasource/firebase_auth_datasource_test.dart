@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:smooth_apod/features/auth/data/datasource/firebase_auth_datasource.dart';
+import 'package:smooth_apod/shared/data/datasource/firebase_auth_datasource.dart';
 
 import '../../mock/class.dart';
 import '../../mock/data.dart';

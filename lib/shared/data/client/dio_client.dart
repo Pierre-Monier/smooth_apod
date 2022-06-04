@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'http_client.dart';
 
@@ -24,3 +25,7 @@ class DioClient extends HttpClient {
     }
   }
 }
+
+final dioClientProvider = Provider<DioClient>((ref) {
+  return DioClient(dio: Dio());
+});
