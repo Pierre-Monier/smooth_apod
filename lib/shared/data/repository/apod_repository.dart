@@ -9,8 +9,18 @@ class ApodRepository {
   final ApodDatasource _apodDatasource;
 
   Future<Apod> getApod() async {
-    final apodJsonData = await _apodDatasource.getApod();
+    try {
+      final apodJsonData = await _apodDatasource.getApod();
 
-    return ApodDTO.fromJson(apodJsonData);
+      return ApodDTO.fromJson(apodJsonData);
+    } on Exception {
+      throw const ApodFetchFailedException();
+    } on TypeError {
+      throw const ApodFetchFailedException();
+    }
   }
+}
+
+class ApodFetchFailedException implements Exception {
+  const ApodFetchFailedException();
 }

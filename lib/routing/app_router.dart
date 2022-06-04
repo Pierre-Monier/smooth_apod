@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../features/apod/presentation/apod_page.dart';
+import '../features/apod/presentation/ui/apod_page.dart';
 import '../features/auth/data/repository/auth_repository.dart';
 import '../features/auth/presentation/ui/login_page.dart';
 import '../features/not_found/presentation/not_found_page.dart';

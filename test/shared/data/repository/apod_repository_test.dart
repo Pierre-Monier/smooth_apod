@@ -6,12 +6,16 @@ import 'package:smooth_apod/shared/model/media_type.dart';
 import '../../mock/data.dart';
 
 void main() {
-  setUpAll(() {
-    when(mockApodDatasource.getApod)
-        .thenAnswer((invocation) => Future.value(mockApodJsonData));
+  late ApodRepository apodRepository;
+
+  setUp(() {
+    apodRepository = ApodRepository(apodDatasource: mockApodDatasource);
   });
+
   test('it can get APOD object', () async {
-    final apodRepository = ApodRepository(apodDatasource: mockApodDatasource);
+    when(mockApodDatasource.getApod)
+        .thenAnswer((_) => Future.value(mockApodJsonData));
+
     final apod = await apodRepository.getApod();
 
     expect(apod.copyright, mockApodJsonData['copyright']);
@@ -25,5 +29,19 @@ void main() {
     expect(apod.thumbnailUrl, mockApodJsonData['thumbnail_url']);
     expect(apod.title, mockApodJsonData['title']);
     expect(apod.url, mockApodJsonData['url']);
+  });
+
+  test('it should throw an ApodFetchFailedException when an Exception occured',
+      () {
+    when(mockApodDatasource.getApod).thenAnswer((_) => throw Exception());
+
+    expect(apodRepository.getApod, throwsA(isA<ApodFetchFailedException>()));
+  });
+
+  test('it should throw an ApodFetchFailedException when a TypeError occured',
+      () {
+    when(mockApodDatasource.getApod).thenAnswer((_) => throw TypeError());
+
+    expect(apodRepository.getApod, throwsA(isA<ApodFetchFailedException>()));
   });
 }

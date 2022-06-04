@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../auth/data/repository/auth_repository.dart';
+import '../../../auth/data/repository/auth_repository.dart';
 
 class ApodPage extends ConsumerWidget {
   const ApodPage({super.key});
