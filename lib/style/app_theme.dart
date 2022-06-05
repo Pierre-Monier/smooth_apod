@@ -11,8 +11,9 @@ final lightTheme = ThemeData(
 );
 
 final darkTheme = ThemeData(
+  useMaterial3: true,
   brightness: Brightness.dark,
-  primaryColor: AppColor.primaryColor,
   errorColor: AppColor.errorColor,
+  colorSchemeSeed: AppColor.primaryColor,
   scaffoldBackgroundColor: AppColor.darkBackgroundColor,
 );
