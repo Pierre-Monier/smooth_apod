@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../dto/apod_dto.dart';
 import '../../model/apod.dart';
 import '../datasource/apod_datasource.dart';
+import '../dto/apod_dto.dart';
 
 class ApodRepository {
   const ApodRepository({required ApodDatasource apodDatasource})

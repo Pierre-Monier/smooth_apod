@@ -4,10 +4,11 @@ import '../style/app_color.dart';
 import 'app_color.dart';
 
 final lightTheme = ThemeData(
+  useMaterial3: true,
   brightness: Brightness.light,
-  primaryColor: AppColor.primaryColor,
   errorColor: AppColor.errorColor,
-  scaffoldBackgroundColor: AppColor.lightBackgroundColor,
+  colorSchemeSeed: AppColor.primaryColor,
+  scaffoldBackgroundColor: AppColor.secondaryLightBackgroundColor,
 );
 
 final darkTheme = ThemeData(
@@ -15,5 +16,5 @@ final darkTheme = ThemeData(
   brightness: Brightness.dark,
   errorColor: AppColor.errorColor,
   colorSchemeSeed: AppColor.primaryColor,
-  scaffoldBackgroundColor: AppColor.darkBackgroundColor,
+  scaffoldBackgroundColor: AppColor.secondaryDarkBackgroundColor,
 );

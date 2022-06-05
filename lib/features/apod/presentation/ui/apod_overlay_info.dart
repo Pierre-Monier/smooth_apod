@@ -4,8 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../style/app_spacing.dart';
 import '../../../../style/app_text_style.dart';
-import '../../../../util/opposite_background_color.dart';
-import '../../../../util/secondary_background_color.dart';
+import '../../../../util/opposite_main_content_background_color.dart';
+import '../../../../util/main_content_background_color.dart';
+import '../../util/apod_overlay_staggering_top.dart';
 import '../../util/date_time_helper.dart';
 import '../controller/apod_template_controller.dart';
 
@@ -44,35 +45,49 @@ class _ApodOverlayInfoState extends ConsumerState<ApodOverlayInfo> {
       explanationSize.height +
       (_paddingContentValue * 2);
 
+  void _updateContentSizeHeight() {
+    final dateTextRenderBox =
+        dateKey.currentContext?.findRenderObject() as RenderBox?;
+    final titleTextRenderBox =
+        titleKey.currentContext?.findRenderObject() as RenderBox?;
+    final explanationTextRenderBox =
+        explanationKey.currentContext?.findRenderObject() as RenderBox?;
+
+    final dateSize = dateTextRenderBox?.size;
+    final titleSize = titleTextRenderBox?.size;
+    final explanationSize = explanationTextRenderBox?.size;
+
+    if (dateSize != null && titleSize != null && explanationSize != null) {
+      final contentSizeHeight = _getContentSizeHeight(
+        dateSize: dateSize,
+        titleSize: titleSize,
+        explanationSize: explanationSize,
+      );
+      final screenHeight = MediaQuery.of(context).size.height;
+      final rawNewInfoContentHeightRatio = contentSizeHeight / screenHeight;
+
+      ref
+          .read(apodTemplateProvider.notifier)
+          .setInfoContentHeightRatio(rawNewInfoContentHeightRatio);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      final dateTextRenderBox =
-          dateKey.currentContext?.findRenderObject() as RenderBox?;
-      final titleTextRenderBox =
-          titleKey.currentContext?.findRenderObject() as RenderBox?;
-      final explanationTextRenderBox =
-          explanationKey.currentContext?.findRenderObject() as RenderBox?;
-
-      final dateSize = dateTextRenderBox?.size;
-      final titleSize = titleTextRenderBox?.size;
-      final explanationSize = explanationTextRenderBox?.size;
-
-      if (dateSize != null && titleSize != null && explanationSize != null) {
-        final contentSizeHeight = _getContentSizeHeight(
-          dateSize: dateSize,
-          titleSize: titleSize,
-          explanationSize: explanationSize,
-        );
-        final screenHeight = MediaQuery.of(context).size.height;
-        final rawNewInfoContentHeightRatio = contentSizeHeight / screenHeight;
-
-        ref
-            .read(apodTemplateProvider.notifier)
-            .setInfoContentHeightRatio(rawNewInfoContentHeightRatio);
-      }
+      _updateContentSizeHeight();
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant ApodOverlayInfo oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.apodDate != widget.apodDate ||
+        oldWidget.apodTitleWidget != widget.apodTitleWidget ||
+        oldWidget.apodExplanation != widget.apodExplanation) {
+      _updateContentSizeHeight();
+    }
   }
 
   double _getMaxScrollableSize({
@@ -96,11 +111,11 @@ class _ApodOverlayInfoState extends ConsumerState<ApodOverlayInfo> {
       child: Stack(
         children: [
           Positioned(
-            top: AppSpacing.p16,
+            top: apodOverlayStaggeringTop,
             right: 0,
             left: 0,
             child: Container(
-              color: Theme.of(context).secondaryBackgroundColor,
+              // color: Theme.of(context).mainContentBackgroundColor,
               height: maxScrollableSize,
             ),
           ),
@@ -108,7 +123,7 @@ class _ApodOverlayInfoState extends ConsumerState<ApodOverlayInfo> {
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
             child: Container(
               padding: const EdgeInsets.all(_paddingContentValue),
-              color: Theme.of(context).scaffoldBackgroundColor,
+              color: Theme.of(context).mainContentBackgroundColor,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -117,10 +132,12 @@ class _ApodOverlayInfoState extends ConsumerState<ApodOverlayInfo> {
                     key: dateKey,
                     style: AppTextStyle.secondaryInfoTextStyle(
                       context,
-                      color: Theme.of(context).oppositeBackgroundColor,
+                      color:
+                          Theme.of(context).oppositeMainContentBackgroundColor,
                     ),
                   ),
                   SizedBox(
+                    key: titleKey,
                     child: widget.apodTitleWidget,
                   ),
                   Text(widget.apodExplanation ?? '', key: explanationKey),

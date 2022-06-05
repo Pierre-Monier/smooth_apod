@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'apod_loader_image.dart';
+import 'apod_loader_visual_content.dart';
 import '../apod_template.dart';
 import 'apod_loader_overlay_info.dart';
 
@@ -11,7 +11,7 @@ class ApodLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ApodTemplate(
-        visualContent: const ApodLoaderImage(),
+        visualContent: const ApodLoaderVisualContent(),
         infoContent: ApodLoaderOverlayInfo(apodDate: apodDate),
       );
 }

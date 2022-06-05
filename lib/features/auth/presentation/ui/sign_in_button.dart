@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../style/app_spacing.dart';
-import '../../../../util/opposite_background_color.dart';
+import '../../../../util/opposite_main_content_background_color.dart';
 
 class SignInButton extends StatelessWidget {
   const SignInButton({
@@ -45,7 +45,7 @@ class SignInButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).oppositeBackgroundColor,
+        color: Theme.of(context).oppositeMainContentBackgroundColor,
         borderRadius: BorderRadius.circular(AppSpacing.p16),
       ),
       child: Material(

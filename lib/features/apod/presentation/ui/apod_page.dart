@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../controller/apod_controller.dart';
+import 'error/apod_error.dart';
 import 'loader/apod_loader.dart';
 
 class ApodPage extends ConsumerWidget {
@@ -20,9 +21,7 @@ class ApodPage extends ConsumerWidget {
         data: ((data) => Center(
               child: Text(data.title),
             )),
-        error: (_, __) => const Center(
-          child: Text('Error'),
-        ),
+        error: (_, __) => ApodError(apodDate: _apodDate),
         loading: () => ApodLoader(apodDate: _apodDate),
       ),
     );
