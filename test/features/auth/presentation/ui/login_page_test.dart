@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:smooth_apod/features/apod/util/app_duration.dart';
 import 'package:smooth_apod/shared/data/datasource/firebase_auth_datasource.dart';
 import 'package:smooth_apod/features/auth/presentation/ui/login_decoration.dart';
 import 'package:smooth_apod/features/auth/presentation/ui/login_page.dart';
@@ -55,7 +56,7 @@ void main() {
     expect(signInButton, findsNWidgets(3));
 
     await tester.tap(signInButton.first);
-    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(AppDuration.mediumDuration);
 
     final loader = find.byType(CircularProgressIndicator);
     expect(loader, findsOneWidget);

@@ -9,17 +9,23 @@ import '../../../../util/main_content_background_color.dart';
 import '../../util/apod_overlay_staggering_top.dart';
 import '../../util/date_time_helper.dart';
 import '../controller/apod_template_controller.dart';
+import 'apod_title.dart';
 
 class ApodOverlayInfo extends ConsumerStatefulWidget {
   const ApodOverlayInfo({
     required this.apodDate,
-    required this.apodTitleWidget,
+    this.apodTitleWidget,
+    this.apodTitle,
     this.apodExplanation,
     super.key,
-  });
+  }) : assert(
+          apodTitle != null || apodTitleWidget != null,
+          'Either apodTitle or apodTitleWidget must be provided',
+        );
 
   final DateTime apodDate;
-  final Widget apodTitleWidget;
+  final Widget? apodTitleWidget;
+  final String? apodTitle;
   // * this is nullable because it can be used in Error or Loading state
   final String? apodExplanation;
 
@@ -96,6 +102,14 @@ class _ApodOverlayInfoState extends ConsumerState<ApodOverlayInfo> {
   }) =>
       screenHeight * infoContentHeightRatio;
 
+  Widget get _titleWidget => SizedBox(
+        key: titleKey,
+        child: widget.apodTitleWidget ??
+            ApodTitle(
+              apodTitle: widget.apodTitle!,
+            ),
+      );
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -124,24 +138,24 @@ class _ApodOverlayInfoState extends ConsumerState<ApodOverlayInfo> {
             child: Container(
               padding: const EdgeInsets.all(_paddingContentValue),
               color: Theme.of(context).mainContentBackgroundColor,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    DateTimeHelper.getApodDateLabel(widget.apodDate),
-                    key: dateKey,
-                    style: AppTextStyle.secondaryInfoTextStyle(
-                      context,
-                      color:
-                          Theme.of(context).oppositeMainContentBackgroundColor,
+              child: SingleChildScrollView(
+                physics: const NeverScrollableScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      DateTimeHelper.getApodDateLabel(widget.apodDate),
+                      key: dateKey,
+                      style: AppTextStyle.secondaryInfoTextStyle(
+                        context,
+                        color: Theme.of(context)
+                            .oppositeMainContentBackgroundColor,
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    key: titleKey,
-                    child: widget.apodTitleWidget,
-                  ),
-                  Text(widget.apodExplanation ?? '', key: explanationKey),
-                ],
+                    _titleWidget,
+                    Text(widget.apodExplanation ?? '', key: explanationKey),
+                  ],
+                ),
               ),
             ),
           ),

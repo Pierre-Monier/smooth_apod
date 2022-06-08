@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ApodLoaderVisualContent extends StatelessWidget {
-  const ApodLoaderVisualContent({super.key});
+  const ApodLoaderVisualContent({this.value, super.key});
+
+  final double? value;
 
   @override
   Widget build(BuildContext context) {
@@ -9,8 +11,10 @@ class ApodLoaderVisualContent extends StatelessWidget {
 
     return SizedBox(
       height: screenHeight,
-      child: const Center(
-        child: CircularProgressIndicator(),
+      child: Center(
+        child: CircularProgressIndicator(
+          value: value,
+        ),
       ),
     );
   }

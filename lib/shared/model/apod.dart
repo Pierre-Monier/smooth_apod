@@ -20,4 +20,7 @@ abstract class Apod {
   final String url;
   final String? hdurl;
   final String? thumbnailUrl;
+
+  bool get isVideo => mediaType == MediaType.video;
+  bool get isImage => mediaType == MediaType.image;
 }

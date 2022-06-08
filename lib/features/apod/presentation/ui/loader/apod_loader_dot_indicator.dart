@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 import '../../../../../style/app_spacing.dart';
+import '../../../util/app_duration.dart';
 import 'apod_title_dot.dart';
 
 class ApodLoaderDotIndicator extends StatefulWidget {
@@ -25,7 +26,7 @@ class _ApodLoaderDotIndicatorState extends State<ApodLoaderDotIndicator>
     _animationControllers = List<AnimationController>.generate(3, (index) {
       return AnimationController(
         vsync: this,
-        duration: const Duration(milliseconds: 200),
+        duration: AppDuration.shortDuration,
       );
     });
 
