@@ -19,7 +19,9 @@ class ApodPage extends ConsumerWidget {
 
     return Scaffold(
       body: apodState.when(
-        data: ((data) => ApodDataPage(apod: data)),
+        data: ((data) => ApodDataPage(
+              apod: data,
+            )),
         error: (_, __) => ApodError(apodDate: _apodDate),
         loading: () => ApodLoader(apodDate: _apodDate),
       ),

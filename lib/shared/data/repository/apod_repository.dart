@@ -13,6 +13,7 @@ class ApodRepository {
   Future<Apod> getApod() async {
     try {
       final apodJsonData = await _apodDatasource.getApod();
+
       return ApodDTO.fromJson(apodJsonData);
     } on Exception {
       throw const ApodFetchFailedException();

@@ -20,29 +20,22 @@ class ApodDataVisualImageContent extends StatefulWidget {
 class _ApodDataVisualImageContentState
     extends State<ApodDataVisualImageContent> {
   bool _isImageLoaded = false;
-  double _loadingValue = 0.0;
 
   static const _animationDuration = AppDuration.mediumDuration;
   static const _safetyDelay = 1.3;
 
-  void _updateLoadingStatus(double loadingValue) {
+  void _updateLoadingStatus() {
+    // * image is loaded
     setState(() {
-      _loadingValue = loadingValue;
+      _isImageLoaded = true;
     });
 
-    // * image is loaded
-    if (loadingValue >= 1.0) {
-      setState(() {
-        _isImageLoaded = true;
-      });
-
-      Future.delayed(
-        // * we multiply the animation duration by the safety delay because
-        // * sometimes the image widget is not loaded yet
-        _animationDuration * _safetyDelay,
-        widget.onVisualContentLoaded,
-      );
-    }
+    Future.delayed(
+      // * we multiply the animation duration by the safety delay because
+      // * sometimes the image widget is not loaded yet
+      _animationDuration * _safetyDelay,
+      widget.onVisualContentLoaded,
+    );
   }
 
   @override
@@ -51,30 +44,29 @@ class _ApodDataVisualImageContentState
       widget.url,
     );
     image.image.resolve(ImageConfiguration.empty).addListener(
-          ImageStreamListener(
-            // * I prefer to process data coming from only one stream
-            // * that's why I don't use the onImage callback
-            (_, __) {},
-            onChunk: (imageChunk) {
-              final expectedTotalBytes = imageChunk.expectedTotalBytes;
-              if (expectedTotalBytes != null) {
-                _updateLoadingStatus(
-                  imageChunk.cumulativeBytesLoaded / expectedTotalBytes,
-                );
-              }
-            },
-          ),
-        );
+      ImageStreamListener(
+        // * I prefer to process data coming from only one stream
+        // * that's why I don't use the onImage callback
+        (_, __) {
+          _updateLoadingStatus();
+        },
+      ),
+    );
 
     return AnimatedSwitcher(
       switchInCurve: Curves.easeIn,
       switchOutCurve: Curves.easeOut,
       duration: _animationDuration,
-      child: _isImageLoaded
-          ? image
-          : ApodLoaderVisualContent(
-              value: _loadingValue,
-            ),
+      layoutBuilder: (child, previousChildren) {
+        return Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            for (final previousChild in previousChildren) previousChild,
+            if (child != null) child
+          ],
+        );
+      },
+      child: _isImageLoaded ? image : const ApodLoaderVisualContent(),
     );
   }
 }
