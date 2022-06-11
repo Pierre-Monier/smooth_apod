@@ -25,6 +25,10 @@ class ApodDataVisualContent extends StatelessWidget {
             url: apod.url,
             onVisualContentLoaded: onVisualContentLoaded,
           )
-        : const ApodDataVisualVideoContent();
+        : ApodDataVisualVideoContent(
+            key: visualContentKey,
+            url: apod.url,
+            onVisualContentLoaded: onVisualContentLoaded,
+          );
   }
 }

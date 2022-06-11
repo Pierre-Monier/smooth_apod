@@ -8,7 +8,7 @@ import '../controller/apod_template_controller.dart';
 
 class ApodTemplate extends ConsumerStatefulWidget {
   const ApodTemplate({
-    required this.infoContent,
+    required this.infoContentBuilder,
     required this.type,
     this.visualContent,
     this.visualContentBuilder,
@@ -24,7 +24,10 @@ class ApodTemplate extends ConsumerStatefulWidget {
     void Function() onVisualContentLoaded,
     Key key,
   )? visualContentBuilder;
-  final Widget infoContent;
+  final Widget Function(
+    BuildContext context,
+    ScrollController controller,
+  ) infoContentBuilder;
   final ApodUIType type;
 
   @override
@@ -59,6 +62,7 @@ class _ApodTemplateState extends ConsumerState<ApodTemplate> {
           .read(apodTemplateProvider.notifier)
           .getInitialOverlayPosition(rawInitialOverlayPosition);
     }
+
     return null;
   }
 
@@ -80,6 +84,22 @@ class _ApodTemplateState extends ConsumerState<ApodTemplate> {
     }
   }
 
+  void _updateOverlayInfoMode({required double currentlyScrolled}) {
+    final apodTemplateController = ref.read(apodTemplateProvider.notifier);
+    final apodTemplateState = ref.read(apodTemplateProvider);
+    final screenHeight = MediaQuery.of(context).size.height;
+    final scrolledRatio = currentlyScrolled / screenHeight;
+
+    if (currentlyScrolled != double.infinity &&
+        currentlyScrolled >= screenHeight &&
+        apodTemplateState.overlayMode == ApodOverlayInfoMode.regular) {
+      apodTemplateController.setApodOverlayMode(ApodOverlayInfoMode.overscroll);
+    } else if (scrolledRatio <= apodTemplateState.initialOverlayPosition &&
+        apodTemplateState.overlayMode == ApodOverlayInfoMode.overscroll) {
+      apodTemplateController.setApodOverlayMode(ApodOverlayInfoMode.regular);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -92,6 +112,10 @@ class _ApodTemplateState extends ConsumerState<ApodTemplate> {
         _updateInitialOverlayPosition();
       });
     }
+
+    _scrollController.addListener(() {
+      _updateOverlayInfoMode(currentlyScrolled: _scrollController.pixels);
+    });
   }
 
   @override
@@ -108,18 +132,15 @@ class _ApodTemplateState extends ConsumerState<ApodTemplate> {
             _updateInitialOverlayPosition,
             _visualContentKey,
           ),
-        DraggableScrollableSheet(
-          controller: _scrollController,
-          initialChildSize: apodTemplateState.initialOverlayPosition,
-          minChildSize: apodTemplateState.initialOverlayPosition,
-          maxChildSize: apodTemplateState.infoContentHeightRatio,
-          builder: ((context, scrollController) => SingleChildScrollView(
-                controller: scrollController,
-                child: SizedBox(
-                  child: widget.infoContent,
-                ),
-              )),
-        ),
+        if (!apodTemplateState.isInFullScreenMode)
+          DraggableScrollableSheet(
+            controller: _scrollController,
+            initialChildSize: apodTemplateState.initialOverlayPosition,
+            minChildSize: apodTemplateState.initialOverlayPosition,
+            maxChildSize: apodTemplateState.infoContentHeightRatio,
+            builder: ((context, scrollController) =>
+                widget.infoContentBuilder(context, scrollController)),
+          ),
       ],
     );
   }

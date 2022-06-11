@@ -10,7 +10,8 @@ class ApodErrorVisualContent extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return SizedBox(
-      height: (screenHeight / 6) * 5,
+      // * this is to force the apod overlay info to show all it's content
+      height: (screenHeight / 3) * 2,
       child: Center(
         child: Text(
           'Unable to fetch data',

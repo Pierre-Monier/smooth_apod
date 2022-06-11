@@ -24,6 +24,9 @@ class ApodDataPage extends StatelessWidget {
           onVisualContentLoaded: onVisualContentLoaded,
           visualContentKey: visualContentKey,
         ),
-        infoContent: ApodDataOverlayInfo(apod: apod),
+        infoContentBuilder: (_, scrollController) => ApodDataOverlayInfo(
+          apod: apod,
+          scrollController: scrollController,
+        ),
       );
 }

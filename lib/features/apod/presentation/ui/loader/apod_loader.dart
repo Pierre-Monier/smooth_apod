@@ -14,6 +14,9 @@ class ApodLoader extends StatelessWidget {
   Widget build(BuildContext context) => ApodTemplate(
         type: ApodUIType.loading,
         visualContent: const ApodLoaderVisualContent(),
-        infoContent: ApodLoaderOverlayInfo(apodDate: apodDate),
+        infoContentBuilder: (_, scrollController) => ApodLoaderOverlayInfo(
+          apodDate: apodDate,
+          scrollController: scrollController,
+        ),
       );
 }

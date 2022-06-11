@@ -14,8 +14,9 @@ class ApodError extends StatelessWidget {
   Widget build(BuildContext context) => ApodTemplate(
         type: ApodUIType.error,
         visualContent: const ApodErrorVisualContent(),
-        infoContent: ApodErrorOverlayInfo(
+        infoContentBuilder: (_, scrollController) => ApodErrorOverlayInfo(
           apodDate: apodDate,
+          scrollController: scrollController,
         ),
       );
 }

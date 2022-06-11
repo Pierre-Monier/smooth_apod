@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../../style/app_text_style.dart';
-import '../../../../util/opposite_main_content_background_color.dart';
 
 class ApodTitle extends StatelessWidget {
   const ApodTitle({required this.apodTitle, super.key});
@@ -13,7 +12,6 @@ class ApodTitle extends StatelessWidget {
         apodTitle,
         style: AppTextStyle.titleTextStyle(
           context,
-          color: Theme.of(context).oppositeMainContentBackgroundColor,
         ),
       );
 }
