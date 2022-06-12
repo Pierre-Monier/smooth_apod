@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../util/app_duration.dart';
-import '../apod_loader_visual_content.dart';
 
 class ApodDataVisualImageContent extends StatefulWidget {
   const ApodDataVisualImageContent({
@@ -25,17 +24,19 @@ class _ApodDataVisualImageContentState
   static const _safetyDelay = 1.3;
 
   void _updateLoadingStatus() {
-    // * image is loaded
-    setState(() {
-      _isImageLoaded = true;
-    });
+    if (!_isImageLoaded) {
+      // * image is loaded
+      setState(() {
+        _isImageLoaded = true;
+      });
 
-    Future.delayed(
-      // * we multiply the animation duration by the safety delay because
-      // * sometimes the image widget is not loaded yet
-      _animationDuration * _safetyDelay,
-      widget.onVisualContentLoaded,
-    );
+      Future.delayed(
+        // * we multiply the animation duration by the safety delay because
+        // * sometimes the image widget is not loaded yet
+        _animationDuration * _safetyDelay,
+        widget.onVisualContentLoaded,
+      );
+    }
   }
 
   @override
@@ -58,15 +59,19 @@ class _ApodDataVisualImageContentState
       switchOutCurve: Curves.easeOut,
       duration: _animationDuration,
       layoutBuilder: (child, previousChildren) {
-        return Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            for (final previousChild in previousChildren) previousChild,
-            if (child != null) child
-          ],
+        return SizedBox(
+          height: (MediaQuery.of(context).size.height / 3),
+          width: MediaQuery.of(context).size.width,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              for (final previousChild in previousChildren) previousChild,
+              if (child != null) child
+            ],
+          ),
         );
       },
-      child: _isImageLoaded ? image : const ApodLoaderVisualContent(),
+      child: _isImageLoaded ? image : const CircularProgressIndicator(),
     );
   }
 }

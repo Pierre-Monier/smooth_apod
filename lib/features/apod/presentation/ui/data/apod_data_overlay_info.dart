@@ -18,6 +18,7 @@ class ApodDataOverlayInfo extends StatelessWidget {
         apodDate: apod.date,
         apodTitle: apod.title,
         apodExplanation: apod.explanation,
+        apodCopyright: apod.copyright,
         scrollController: scrollController,
       );
 }

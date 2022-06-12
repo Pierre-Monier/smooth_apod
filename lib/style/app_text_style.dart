@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../util/opposite_main_content_background_color.dart';
 
 abstract class AppTextStyle {
+  static final _bodyTextTheme = GoogleFonts.merriweatherTextTheme();
+
   static TextStyle? secondaryInfoTextStyle(
     BuildContext context, {
     TextTheme? customTextTheme,
@@ -32,4 +35,9 @@ abstract class AppTextStyle {
     return textTheme.headline4
         ?.copyWith(color: Theme.of(context).oppositeMainContentBackgroundColor);
   }
+
+  static TextStyle? bodyTextStyle(BuildContext context, {Color? color}) =>
+      _bodyTextTheme.bodyText1?.copyWith(
+        color: color ?? Theme.of(context).oppositeMainContentBackgroundColor,
+      );
 }

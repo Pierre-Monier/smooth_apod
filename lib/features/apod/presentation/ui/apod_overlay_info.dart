@@ -20,6 +20,7 @@ class ApodOverlayInfo extends ConsumerStatefulWidget {
     required this.apodTitle,
     this.apodTitleWidget,
     this.apodExplanation,
+    this.apodCopyright,
     super.key,
   });
 
@@ -32,6 +33,7 @@ class ApodOverlayInfo extends ConsumerStatefulWidget {
 
   /// this is nullable because it can be used in Error or Loading state
   final String? apodExplanation;
+  final String? apodCopyright;
   final ScrollController scrollController;
 
   @override
@@ -126,8 +128,26 @@ class _ApodOverlayInfoState extends ConsumerState<ApodOverlayInfo> {
 
   Widget get _explanationWidget => Text(
         widget.apodExplanation ?? '',
+        style: AppTextStyle.bodyTextStyle(context),
         key: _explanationKey,
       );
+
+  Widget get _dateWidget {
+    String text = DateTimeHelper.getApodDateLabel(widget.apodDate);
+
+    if (widget.apodCopyright != null) {
+      text += ', ©${widget.apodCopyright}';
+    }
+
+    return Text(
+      text,
+      key: _dateKey,
+      style: AppTextStyle.secondaryInfoTextStyle(
+        context,
+        color: Theme.of(context).oppositeMainContentBackgroundColor,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -174,15 +194,7 @@ class _ApodOverlayInfoState extends ConsumerState<ApodOverlayInfo> {
               controller: widget.scrollController,
               slivers: [
                 SliverToBoxAdapter(
-                  child: Text(
-                    DateTimeHelper.getApodDateLabel(widget.apodDate),
-                    key: _dateKey,
-                    style: AppTextStyle.secondaryInfoTextStyle(
-                      context,
-                      color:
-                          Theme.of(context).oppositeMainContentBackgroundColor,
-                    ),
-                  ),
+                  child: _dateWidget,
                 ),
                 const SliverToBoxAdapter(
                   child: _heightSpacing,

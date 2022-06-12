@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../style/app_color.dart';
 import 'app_color.dart';
 
-final lightTheme = ThemeData(
+final textTheme = GoogleFonts.montserratTextTheme();
+
+final _baseTheme = ThemeData(
+  textTheme: textTheme,
   useMaterial3: true,
-  brightness: Brightness.light,
   errorColor: AppColor.errorColor,
   colorSchemeSeed: AppColor.primaryColor,
+);
+
+final lightTheme = _baseTheme.copyWith(
+  brightness: Brightness.light,
   scaffoldBackgroundColor: AppColor.secondaryLightBackgroundColor,
 );
 
-final darkTheme = ThemeData(
-  useMaterial3: true,
+final darkTheme = _baseTheme.copyWith(
   brightness: Brightness.dark,
-  errorColor: AppColor.errorColor,
-  colorSchemeSeed: AppColor.primaryColor,
   scaffoldBackgroundColor: AppColor.secondaryDarkBackgroundColor,
 );
