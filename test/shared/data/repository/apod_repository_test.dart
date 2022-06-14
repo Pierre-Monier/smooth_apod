@@ -14,21 +14,21 @@ void main() {
 
   test('it can get APOD object', () async {
     when(mockApodDatasource.getApod)
-        .thenAnswer((_) => Future.value(mockApodJsonData));
+        .thenAnswer((_) => Future.value(mockApodJsonDataImage));
 
     final apod = await apodRepository.getApod();
 
-    expect(apod.copyright, mockApodJsonData['copyright']);
-    expect(apod.date, DateTime.parse(mockApodJsonData['date'] as String));
-    expect(apod.explanation, mockApodJsonData['explanation']);
-    expect(apod.hdurl, mockApodJsonData['hdurl']);
+    expect(apod.copyright, mockApodJsonDataImage['copyright']);
+    expect(apod.date, DateTime.parse(mockApodJsonDataImage['date'] as String));
+    expect(apod.explanation, mockApodJsonDataImage['explanation']);
+    expect(apod.hdurl, mockApodJsonDataImage['hdurl']);
     expect(
       apod.mediaType,
-      MediaTypeFromJson.fromJson(mockApodJsonData['media_type'] as String),
+      MediaTypeFromJson.fromJson(mockApodJsonDataImage['media_type'] as String),
     );
-    expect(apod.thumbnailUrl, mockApodJsonData['thumbnail_url']);
-    expect(apod.title, mockApodJsonData['title']);
-    expect(apod.url, mockApodJsonData['url']);
+    expect(apod.thumbnailUrl, mockApodJsonDataImage['thumbnail_url']);
+    expect(apod.title, mockApodJsonDataImage['title']);
+    expect(apod.url, mockApodJsonDataImage['url']);
   });
 
   test('it should throw an ApodFetchFailedException when an Exception occured',

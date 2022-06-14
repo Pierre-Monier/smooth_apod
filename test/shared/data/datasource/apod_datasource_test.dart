@@ -18,12 +18,12 @@ void main() {
         any(),
         headers: any(named: 'headers'),
       ),
-    ).thenAnswer((_) => Future.value(mockApodJsonData));
+    ).thenAnswer((_) => Future.value(mockApodJsonDataImage));
 
     final apodDatasource = ApodDatasource(httpClient: mockHttpClient);
 
     final response = await apodDatasource.getApod();
 
-    expect(response, mockApodJsonData);
+    expect(response, mockApodJsonDataImage);
   });
 }

@@ -16,8 +16,11 @@ final mockDioError = MockDioError();
 const mockErrorStatusCode = 418;
 final mockHttpClient = MockHttpClient();
 final fakeUri = FakeUri();
-final mockApodJsonData =
+final mockApodJsonDataImage =
     jsonDecode(File('test_ressources/apod_image.json').readAsStringSync())
+        as Map<String, dynamic>;
+final mockApodJsonDataVideo =
+    jsonDecode(File('test_ressources/apod_video.json').readAsStringSync())
         as Map<String, dynamic>;
 final mockApodDatasource = MockApodDatasource();
 const mockUID = 'some_random_uid';
