@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../util/apod_overlay_staggering_top.dart';
 import '../../util/apod_ui_type.dart';
 import '../../util/app_duration.dart';
+import '../controller/apod_overlay_info_mode.dart';
 import '../controller/apod_template_controller.dart';
 
 class ApodTemplate extends ConsumerStatefulWidget {

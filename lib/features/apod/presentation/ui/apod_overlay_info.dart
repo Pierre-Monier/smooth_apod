@@ -9,6 +9,7 @@ import '../../../../util/main_content_background_color.dart';
 import '../../util/apod_overlay_staggering_top.dart';
 import '../../util/app_duration.dart';
 import '../../util/date_time_helper.dart';
+import '../controller/apod_overlay_info_mode.dart';
 import '../controller/apod_template_controller.dart';
 import 'apod_persistent_header_delegate.dart';
 import 'apod_title.dart';
