@@ -7,14 +7,14 @@ import 'package:smooth_apod/features/auth/presentation/ui/sign_in_button.dart';
 import 'package:smooth_apod/shared/data/datasource/firebase_auth_datasource.dart';
 
 class LoginRobot {
-  const LoginRobot({required WidgetTester tester}) : _tester = tester;
+  const LoginRobot({required this.tester});
 
-  final WidgetTester _tester;
+  final WidgetTester tester;
 
   Future<void> pumpLoginPage({
     required FirebaseAuthDataSource mockFirebaseAuthDatasource,
   }) async {
-    await _tester.pumpWidget(
+    await tester.pumpWidget(
       ProviderScope(
         overrides: [
           firebaseAuthDatasourceProvider
@@ -40,15 +40,15 @@ class LoginRobot {
   Future<void> tapSignInWithGithubButton() async {
     final signInButtons = _findSignInButtons();
 
-    await _tester.tap(signInButtons.first);
-    await _tester.pump();
+    await tester.tap(signInButtons.first);
+    await tester.pump();
   }
 
   Future<void> tapSignInAnonymouslyButton() async {
     final signInButtons = _findSignInButtons();
 
-    await _tester.tap(signInButtons.last);
-    await _tester.pump();
+    await tester.tap(signInButtons.last);
+    await tester.pump();
   }
 
   void expectLoader() {

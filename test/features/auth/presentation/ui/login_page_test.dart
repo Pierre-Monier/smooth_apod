@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../../shared/mock/data.dart';
-import 'login_robot.dart';
+import '../login_robot.dart';
 
 void main() {
   setUpAll(() async {
